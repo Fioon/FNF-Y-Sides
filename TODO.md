@@ -78,3 +78,4 @@
 - [ ] BUG: Options menu dialogues are bugged when you play some of them at the same time
 - [ ] ENHANCEMENT: Improve dialogue portraits
 - [ ] RECOMMENDATION: Needs more difficulty, new players ain't playing Y Sides first so we can add something to make it a bit harder (such as health drain)
+- [ ] RECOMMENDATION: In middle scroll, some elements of HUD are in the way of the notes, make it uncomfortable to play
