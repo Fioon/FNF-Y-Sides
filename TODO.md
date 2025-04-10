@@ -45,10 +45,13 @@
     - [x] Improved low-end pcs warning
     - [x] Improved Title State texts section
 
-# WEEK 3 UPDATE
+# WEEK 2 & 3 UPDATE
 
 ## SONGS
 
+- [ ] Spookeez
+- [ ] South
+- [ ] Monster
 - [ ] Pico
 - [ ] Philly Nice
 - [ ] Blammed
@@ -56,6 +59,8 @@
 ## HUD
 
 - [ ] Pico icons
+- [ ] Spooky kids icons
+- [ ] Monster icons
 
 ## MENUS
 
@@ -67,8 +72,12 @@
 ## OTHER
 
 - [ ] Cutscene???
-- [ ] Dialogues
-- [ ] Mechanics
+
+- [ ] Dialogues (Week 2)
+- [ ] Mechanics (Week 2)
+
+- [ ] Dialogues (Week 3)
+- [ ] Mechanics (Week 3)
 
 ## SPECIFIC
 
