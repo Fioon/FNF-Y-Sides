@@ -1,0 +1,21 @@
+{
+	"songs": [
+		["Philly Nice", "dad", [97, 181, 180]]
+	],
+
+	"weekCharacters": [
+		"dad",
+		"bf",
+		"gf"
+	],
+	"weekBackground": "stage",
+	"difficulties": "Hard",
+
+	"storyName": "Pico!",
+	"weekBefore": "week2",
+	"weekName": "Week 3",
+	"startUnlocked": true,
+
+	"hideStoryMode": false,
+	"hideFreeplay": false
+}
