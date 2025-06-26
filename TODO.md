@@ -89,6 +89,8 @@
 - [ ] Dialogues (Week 3)
 - [ ] Mechanics (Week 3)
 
+- [ ] New volume soundtray
+
 ## SPECIFIC
 
 - [x] BUG: During Dad Battle's dialogue, you can press SPACE and start lifting dumbbells
