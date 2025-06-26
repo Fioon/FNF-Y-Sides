@@ -91,6 +91,18 @@
 
 - [ ] New volume soundtray
 
+- [ ] Test (SONGCARD)
+- [ ] Tutorial (SONGCARD)
+- [ ] Bopeebo (SONGCARD)
+- [ ] Fresh (SONGCARD)
+- [ ] Dad Battle (SONGCARD)
+- [ ] Spookeez (SONGCARD)
+- [ ] South (SONGCARD)
+- [ ] Monster (SONGCARD)
+- [ ] Pico (SONGCARD)
+- [ ] Philly Nice (SONGCARD)
+- [ ] Blammed (SONGCARD)
+
 ## SPECIFIC
 
 - [x] BUG: During Dad Battle's dialogue, you can press SPACE and start lifting dumbbells

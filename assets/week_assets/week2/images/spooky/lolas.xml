@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas imagePath="lolas.png">
+	<!-- Created with Adobe Animate version 22.0.2.168 -->
+	<!-- http://www.adobe.com/products/animate.html -->
+	<SubTexture name="persjnaoi0000" x="5" y="5" width="1549" height="345" frameX="0" frameY="-6" frameWidth="1549" frameHeight="352"/>
+	<SubTexture name="persjnaoi0001" x="5" y="5" width="1549" height="345" frameX="0" frameY="-6" frameWidth="1549" frameHeight="352"/>
+	<SubTexture name="persjnaoi0002" x="5" y="388" width="1545" height="350" frameX="-1" frameY="-2" frameWidth="1549" frameHeight="352"/>
+	<SubTexture name="persjnaoi0003" x="5" y="388" width="1545" height="350" frameX="-1" frameY="-2" frameWidth="1549" frameHeight="352"/>
+	<SubTexture name="persjnaoi0004" x="5" y="776" width="1542" height="352" frameX="-2" frameY="0" frameWidth="1549" frameHeight="352"/>
+	<SubTexture name="persjnaoi0005" x="5" y="776" width="1542" height="352" frameX="-2" frameY="0" frameWidth="1549" frameHeight="352"/>
+	<SubTexture name="persjnaoi0006" x="5" y="1166" width="1542" height="352" frameX="-2" frameY="0" frameWidth="1549" frameHeight="352"/>
+	<SubTexture name="persjnaoi0007" x="5" y="1166" width="1542" height="352" frameX="-2" frameY="0" frameWidth="1549" frameHeight="352"/>
+	<SubTexture name="persjnaoi0008" x="5" y="1166" width="1542" height="352" frameX="-2" frameY="0" frameWidth="1549" frameHeight="352"/>
+	<SubTexture name="persjnaoi0009" x="5" y="1166" width="1542" height="352" frameX="-2" frameY="0" frameWidth="1549" frameHeight="352"/>
+	<SubTexture name="persjnaoi0010" x="5" y="1166" width="1542" height="352" frameX="-2" frameY="0" frameWidth="1549" frameHeight="352"/>
+	<SubTexture name="persjnaoi0011" x="5" y="1166" width="1542" height="352" frameX="-2" frameY="0" frameWidth="1549" frameHeight="352"/>
+	<SubTexture name="persjnaoi0012" x="5" y="1166" width="1542" height="352" frameX="-2" frameY="0" frameWidth="1549" frameHeight="352"/>
+	<SubTexture name="persjnaoi0013" x="5" y="1166" width="1542" height="352" frameX="-2" frameY="0" frameWidth="1549" frameHeight="352"/>
+</TextureAtlas>
