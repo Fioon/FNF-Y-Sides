@@ -1,5 +1,6 @@
 package states;
 
+import haxe.Json;
 import flixel.addons.display.FlxBackdrop;
 import shaders.WiggleEffect;
 
@@ -22,7 +23,9 @@ class GalleryState extends MusicBeatState
     ];
 
 	var wiggle:WiggleEffect = null;
+	var wiggleBg:WiggleEffect = null;
 
+    public static var linesPos:Array<Float> = [0, 0];
     private static var curSelected:Int = 0;
 
     override function create() 
@@ -32,16 +35,57 @@ class GalleryState extends MusicBeatState
         FlxG.mouse.visible = true;
 
 		wiggle = new WiggleEffect(2, 4, 0.002, WiggleEffectType.DREAMY);
+		wiggleBg = new WiggleEffect(2, 4, 0.002, WiggleEffectType.DREAMY);
         
         bg = new FlxSprite();
         bg.loadGraphic(Paths.image('gallery/bg'));
         bg.antialiasing = ClientPrefs.data.antialiasing;
+        bg.shader = wiggleBg;
         add(bg);
 
         lines.velocity.set(75, 75);
         lines.alpha = 0.45;
         lines.antialiasing = ClientPrefs.data.antialiasing;
+        lines.setPosition(GalleryState.linesPos[0], GalleryState.linesPos[1]);
         add(lines);
+
+        optGrp = new FlxTypedGroup<GalleryObject>();
+        add(optGrp);
+
+        leftArrow = new FlxSprite(45, 0);
+        leftArrow.loadGraphic(Paths.image('gallery/arrow'));
+        leftArrow.screenCenter(Y);
+        leftArrow.antialiasing = ClientPrefs.data.antialiasing;
+        add(leftArrow);
+
+        leftArrow.y -= 10;
+        FlxTween.tween(leftArrow, {y: leftArrow.y + 20}, 7, {ease: FlxEase.quartInOut, type: PINGPONG});
+
+        rightArrow = new FlxSprite(45, 0);
+        rightArrow.loadGraphic(Paths.image('gallery/arrow'));
+        rightArrow.screenCenter(Y);
+        rightArrow.antialiasing = ClientPrefs.data.antialiasing;
+        rightArrow.x = FlxG.width - rightArrow.width - 45;
+        rightArrow.flipX = true;
+        add(rightArrow);
+
+        rightArrow.y -= 10;
+        FlxTween.tween(rightArrow, {y: rightArrow.y + 20}, 7, {ease: FlxEase.quartInOut, type: PINGPONG, startDelay: 0.2});
+
+        for(i in 0...optArray.length)
+        {
+            var spr = new GalleryObject();
+            spr.loadGraphic(Paths.image('gallery/' + optArray[i]));
+            spr.antialiasing = ClientPrefs.data.antialiasing;
+            spr.screenCenter();
+            spr.targetX = i;
+            spr.x += FlxG.width * i;
+            spr.shader = wiggle;
+            optGrp.add(spr);
+
+            spr.y -= 10;
+            FlxTween.tween(spr, {y: spr.y + 20}, 7, {ease: FlxEase.quartInOut, type: PINGPONG, startDelay: 0.1});
+        }
 
         barTop = new FlxSprite();
         barTop.loadGraphic(Paths.image('gallery/bars'));
@@ -65,44 +109,6 @@ class GalleryState extends MusicBeatState
         bfIconsBottom.antialiasing = ClientPrefs.data.antialiasing;
         add(bfIconsBottom);
 
-        optGrp = new FlxTypedGroup<GalleryObject>();
-        add(optGrp);
-
-        leftArrow = new FlxSprite(45, 0);
-        leftArrow.loadGraphic(Paths.image('gallery/arrow'));
-        leftArrow.screenCenter(Y);
-        leftArrow.antialiasing = ClientPrefs.data.antialiasing;
-        add(leftArrow);
-
-        leftArrow.y -= 10;
-        FlxTween.tween(leftArrow, {y: leftArrow.y + 20}, 7, {ease: FlxEase.quartInOut, type: PINGPONG});
-
-        rightArrow = new FlxSprite(45, 0);
-        rightArrow.loadGraphic(Paths.image('gallery/arrow'));
-        rightArrow.screenCenter(Y);
-        rightArrow.antialiasing = ClientPrefs.data.antialiasing;
-        rightArrow.x = FlxG.width - rightArrow.width - 45;
-        rightArrow.flipX = true;
-        add(rightArrow);
-
-        rightArrow.y -= 10;
-        FlxTween.tween(rightArrow, {y: rightArrow.y + 20}, 7, {ease: FlxEase.quartInOut, type: PINGPONG});
-
-        for(i in 0...optArray.length)
-        {
-            var spr = new GalleryObject();
-            spr.loadGraphic(Paths.image('gallery/' + optArray[i]));
-            spr.antialiasing = ClientPrefs.data.antialiasing;
-            spr.screenCenter();
-            spr.targetX = i;
-            spr.x += FlxG.width * i;
-            spr.shader = wiggle;
-            optGrp.add(spr);
-
-            spr.y -= 10;
-            FlxTween.tween(spr, {y: spr.y + 20}, 7, {ease: FlxEase.quartInOut, type: PINGPONG});
-        }
-
         changeSelect();
     }
 
@@ -112,6 +118,10 @@ class GalleryState extends MusicBeatState
 
 		if (wiggle != null) {
 			wiggle.update(elapsed);
+		}
+
+		if (wiggleBg != null) {
+			wiggleBg.update(elapsed);
 		}
 
         if(controls.BACK)
@@ -130,10 +140,45 @@ class GalleryState extends MusicBeatState
             changeSelect(1);
             rightArrow.scale.set(1.25, 1.075);
         }
-        else if(controls.UI_LEFT_P)
+        if(controls.UI_LEFT_P)
         {
             changeSelect(-1);
             leftArrow.scale.set(1.25, 1.075);
+        }
+
+        if(controls.ACCEPT)
+        {
+            var selectedItem:String = optArray[curSelected];
+            switch(selectedItem)
+            {
+                case 'outdated_concepts':
+                    FlxG.sound.play(Paths.sound('confirmMenu'));
+
+					GalleryState.linesPos.insert(0, lines.x);
+					GalleryState.linesPos.insert(1, lines.y);
+
+                    FlxTween.cancelTweensOf(leftArrow);
+                    for(obj in optGrp)
+                    {
+                        FlxTween.cancelTweensOf(obj);
+                    }
+                    FlxTween.cancelTweensOf(rightArrow);
+
+                    FlxTween.tween(leftArrow, {y: 800}, 0.6, {ease: FlxEase.quartIn});
+                    FlxTween.tween(optGrp.members[curSelected], {y: 800}, 0.6, {ease: FlxEase.quartIn, startDelay: 0.1});
+                    FlxTween.tween(rightArrow, {y: 800}, 0.6, {ease: FlxEase.quartIn, startDelay: 0.2});
+
+                    FlxTween.tween(bfIconsTop, {alpha: 0}, 0.6);
+                    FlxTween.tween(bfIconsBottom, {alpha: 0}, 0.6);
+
+                    new FlxTimer().start(0.8, function(t:FlxTimer)
+                    {
+						FlxTransitionableState.skipNextTransIn = true;
+						FlxTransitionableState.skipNextTransOut = true;
+                        MusicBeatState.switchState(new GalleryStateImages(selectedItem));
+                    });
+                default:
+            }
         }
     }
 
@@ -167,5 +212,174 @@ class GalleryObject extends FlxSprite
 
 		var lerpVal:Float = Math.exp(-elapsed * 9.6);
 		x = FlxMath.lerp((targetX * distancePerItem.x) + startPosition.x, x, lerpVal);
+    }
+}
+
+typedef ImageData = 
+{
+    var name:String;
+    var description:String;
+}
+
+class GalleryStateImages extends MusicBeatState
+{
+    var imageDataArray:Array<ImageData> = [];
+    var imageGrp:FlxTypedGroup<GalleryObject>;
+    
+    var bg:FlxSprite;
+    var barTop:FlxSprite;
+    var barBottom:FlxSprite;
+    var titleText:FlxText;
+    var descText:FlxText;
+    
+    var lines:FlxBackdrop = new FlxBackdrop(Paths.image('gallery/lines'), #if (flixel <= "5.0.0") 0.2, 0.2, true, true #else XY #end);
+
+	var wiggleBg:WiggleEffect = null;
+
+    private static var curSelected:Int = 0;
+
+    public function new(folderName:String)
+    {
+        super();
+
+        FlxG.mouse.visible = true;
+
+		wiggleBg = new WiggleEffect(2, 4, 0.002, WiggleEffectType.DREAMY);
+        
+        bg = new FlxSprite();
+        bg.loadGraphic(Paths.image('gallery/bg'));
+        bg.antialiasing = ClientPrefs.data.antialiasing;
+        bg.shader = wiggleBg;
+        add(bg);
+        
+        lines.velocity.set(75, 75);
+        lines.alpha = 0.45;
+        lines.antialiasing = ClientPrefs.data.antialiasing;
+        lines.setPosition(GalleryState.linesPos[0], GalleryState.linesPos[1]);
+        add(lines);
+
+        barTop = new FlxSprite();
+        barTop.loadGraphic(Paths.image('gallery/bars'));
+        barTop.antialiasing = ClientPrefs.data.antialiasing;
+        add(barTop);
+
+        barBottom = new FlxSprite();
+        barBottom.loadGraphic(Paths.image('gallery/bars'));
+        barBottom.antialiasing = ClientPrefs.data.antialiasing;
+        barBottom.y = FlxG.height - barBottom.height;
+        barBottom.flipY = true;
+        add(barBottom);
+
+        titleText = new FlxText(0, 20, FlxG.width, 'A');
+        titleText.setFormat(Paths.font('vcr.ttf'), 50, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE);
+        titleText.antialiasing = ClientPrefs.data.antialiasing;
+        titleText.y = barTop.y + (barTop.height / 2) - (titleText.height / 2);
+        add(titleText);
+
+        descText = new FlxText(0, 20, FlxG.width, 'A');
+        descText.setFormat(Paths.font('vcr.ttf'), 40, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE);
+        descText.antialiasing = ClientPrefs.data.antialiasing;
+        descText.y = barBottom.y + (barBottom.height / 2) - (descText.height / 2);
+        add(descText);
+
+        imageGrp = new FlxTypedGroup<GalleryObject>();
+        add(imageGrp);
+
+        var imagesOnFolder = FileSystem.readDirectory('assets/shared/images/gallery/$folderName');
+        
+        //remove the .json files (lmao)
+        for(obj in imagesOnFolder)
+        {
+            if(StringTools.endsWith(obj, '.json'))
+            {
+                imagesOnFolder.remove(obj);
+            }
+        }
+
+        trace('lol: $imagesOnFolder');
+        for(num => image in imagesOnFolder)
+        {
+            trace(' * $image');
+            
+            // removing the extension .png
+            var imageName = StringTools.replace(image, '.png', '');
+
+            try {
+                var content = File.getContent('assets/shared/images/gallery/$folderName/$imageName.json');
+                var imageData = Json.parse(content);
+
+                trace('$num: ${imageData.name}');
+                trace('$num: ${imageData.description}');
+
+                imageDataArray.push(imageData);
+            } 
+            catch(exc)
+            {
+                trace('No json has been found for the image with ID $num');
+            }
+
+            var spr = new GalleryObject();
+            spr.loadGraphic(Paths.image('gallery/$folderName/$imageName'));
+            trace(' - [$num] Path: ${'assets/shared/images/gallery/$folderName/$imageName.png'}');
+            spr.antialiasing = ClientPrefs.data.antialiasing;
+            spr.screenCenter();
+            spr.startPosition = new FlxPoint(spr.x, spr.y);
+            spr.targetX = num;
+            spr.x += FlxG.width * num;
+            imageGrp.add(spr);
+        }
+
+        changeSelect();
+    }
+
+    override function update(elapsed:Float) 
+    {
+        super.update(elapsed);
+
+        if (wiggleBg != null) {
+            wiggleBg.update(elapsed);
+        }
+
+        /*
+        var leftMult:Float = FlxMath.lerp(leftArrow.scale.x, 1, elapsed * 9);
+        leftArrow.scale.set(leftMult, leftMult);
+
+        var rightMult:Float = FlxMath.lerp(rightArrow.scale.x, 1, elapsed * 9);
+        rightArrow.scale.set(rightMult, rightMult);
+        */
+        
+        if(controls.UI_RIGHT_P)
+        {
+            changeSelect(1);
+            //rightArrow.scale.set(1.25, 1.075);
+        }
+        if(controls.UI_LEFT_P)
+        {
+            changeSelect(-1);
+            //leftArrow.scale.set(1.25, 1.075);
+        }
+
+        if(controls.BACK)
+        {
+            MusicBeatState.switchState(new GalleryState());
+        }
+    }
+    
+    function changeSelect(change:Int = 0)
+    {
+        curSelected = FlxMath.wrap(curSelected + change, 0, imageGrp.length - 1);
+
+		for (num => item in imageGrp.members)
+		{
+			item.targetX = num - curSelected;
+			item.alpha = 0.6;
+			if (item.targetX == 0) item.alpha = 1;
+		}
+
+        if(imageDataArray[curSelected] != null)
+        {
+            titleText.text = imageDataArray[curSelected].name != null ? imageDataArray[curSelected].name : 'Untitled';
+            descText.text = imageDataArray[curSelected].description != null ? imageDataArray[curSelected].description : 'No description available.';
+        }
     }
 }
