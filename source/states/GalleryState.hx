@@ -6,7 +6,8 @@ import shaders.WiggleEffect;
 class GalleryState extends MusicBeatState
 {
     var bg:FlxSprite;
-    var bars:FlxSprite;
+    var barTop:FlxSprite;
+    var barBottom:FlxSprite;
     var lines:FlxBackdrop = new FlxBackdrop(Paths.image('gallery/lines'), #if (flixel <= "5.0.0") 0.2, 0.2, true, true #else XY #end);
 	var bfIconsTop:FlxBackdrop = new FlxBackdrop(Paths.image('gallery/bfIcon'), #if (flixel <= "5.0.0") 0.2, 0.2, true, true #else X #end);
 	var bfIconsBottom:FlxBackdrop = new FlxBackdrop(Paths.image('gallery/bfIcon'), #if (flixel <= "5.0.0") 0.2, 0.2, true, true #else X #end);
@@ -42,10 +43,17 @@ class GalleryState extends MusicBeatState
         lines.antialiasing = ClientPrefs.data.antialiasing;
         add(lines);
 
-        bars = new FlxSprite();
-        bars.loadGraphic(Paths.image('gallery/bars'));
-        bars.antialiasing = ClientPrefs.data.antialiasing;
-        add(bars);
+        barTop = new FlxSprite();
+        barTop.loadGraphic(Paths.image('gallery/bars'));
+        barTop.antialiasing = ClientPrefs.data.antialiasing;
+        add(barTop);
+
+        barBottom = new FlxSprite();
+        barBottom.loadGraphic(Paths.image('gallery/bars'));
+        barBottom.antialiasing = ClientPrefs.data.antialiasing;
+        barBottom.y = FlxG.height - barBottom.height;
+        barBottom.flipY = true;
+        add(barBottom);
 
         bfIconsTop.velocity.set(-50, 0);
         bfIconsTop.antialiasing = ClientPrefs.data.antialiasing;

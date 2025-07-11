@@ -73,6 +73,7 @@
 
 ## MENUS
 
+- [ ] Title menu (NEW)
 - [ ] Results screen
     - [ ] Ranking songs
     - [x] BUG: The rank displayed has some sort of delay to show the actual rank
