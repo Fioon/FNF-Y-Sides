@@ -28,6 +28,7 @@ jobs:
         run: |
           haxelib --global --quiet install hmm
           haxelib --global --quiet run hmm setup
+          haxelib --global update haxelib
           haxelib run hmm install --quiet
         shell: cmd
       - name: Skip SScript setup mode
