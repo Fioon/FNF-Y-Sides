@@ -36,7 +36,7 @@ class MainMenuState extends MusicBeatState
 
 	var optionShit2:Array<String> = [
 		'options',
-		'awards'
+		'awards',
 	];
 
 	var bg:FlxSprite;
@@ -422,10 +422,7 @@ class MainMenuState extends MusicBeatState
 			}
 			#end
 
-			if(FlxG.keys.justPressed.ONE)
-			{
-				MusicBeatState.switchState(new GalleryState());
-			}
+			if(FlxG.keys.justPressed.ONE) transitionToGallery();
 		}
 
 		super.update(elapsed);
@@ -570,6 +567,29 @@ class MainMenuState extends MusicBeatState
 
 						iconsPos.insert(0, icons.x);
 						iconsPos.insert(1, icons.y);
+					#end
+				});
+			}});
+		});
+	}
+
+	function transitionToGallery()
+	{
+		new FlxTimer().start(0.4, function(tmr:FlxTimer)
+		{
+			FlxTween.cancelTweensOf(icons);
+			FlxTween.tween(icons, {alpha: 0}, 0.35);
+
+			FlxTween.cancelTweensOf(characters);
+			FlxTween.tween(characters, {alpha: 0, "scale.x": 1.05, "scale.y": 1.05}, 0.35, {ease: FlxEase.quartIn, onComplete: function(twn:FlxTween)
+			{
+				new FlxTimer().start(0.15, function(tmr:FlxTimer)
+				{
+					#if ACHIEVEMENTS_ALLOWED
+						FlxTransitionableState.skipNextTransIn = true;
+						FlxTransitionableState.skipNextTransOut = true;
+						
+						MusicBeatState.switchState(new GalleryState());
 					#end
 				});
 			}});

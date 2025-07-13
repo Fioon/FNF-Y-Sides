@@ -36,6 +36,9 @@ class GalleryState extends MusicBeatState
 
 		wiggle = new WiggleEffect(2, 4, 0.002, WiggleEffectType.DREAMY);
 		wiggleBg = new WiggleEffect(2, 4, 0.002, WiggleEffectType.DREAMY);
+
+		var colorBg:FlxSprite = new FlxSprite().makeGraphic(1280, 720, 0xFFBFB4F1);
+		add(colorBg);
         
         bg = new FlxSprite();
         bg.loadGraphic(Paths.image('gallery/bg'));
@@ -49,6 +52,11 @@ class GalleryState extends MusicBeatState
         lines.setPosition(GalleryState.linesPos[0], GalleryState.linesPos[1]);
         add(lines);
 
+        if(!GalleryStateImages.comingFromImageGallery) {
+            lines.alpha = 0;
+            FlxTween.tween(lines, {alpha: 0.45}, 1);
+        }
+
         optGrp = new FlxTypedGroup<GalleryObject>();
         add(optGrp);
 
@@ -58,8 +66,12 @@ class GalleryState extends MusicBeatState
         leftArrow.antialiasing = ClientPrefs.data.antialiasing;
         add(leftArrow);
 
-        leftArrow.y -= 10;
-        FlxTween.tween(leftArrow, {y: leftArrow.y + 20}, 7, {ease: FlxEase.quartInOut, type: PINGPONG});
+        var leftOGY:Float = leftArrow.y;
+        leftArrow.y = 800;
+        FlxTween.tween(leftArrow, {y: leftOGY - 10}, 0.8, {ease: FlxEase.quartOut, onComplete: function(t:FlxTween)
+        {
+            FlxTween.tween(leftArrow, {y: leftArrow.y + 20}, 7, {ease: FlxEase.quartInOut, type: PINGPONG});
+        }});
 
         rightArrow = new FlxSprite(45, 0);
         rightArrow.loadGraphic(Paths.image('gallery/arrow'));
@@ -69,8 +81,12 @@ class GalleryState extends MusicBeatState
         rightArrow.flipX = true;
         add(rightArrow);
 
-        rightArrow.y -= 10;
-        FlxTween.tween(rightArrow, {y: rightArrow.y + 20}, 7, {ease: FlxEase.quartInOut, type: PINGPONG, startDelay: 0.2});
+        var rightOGY:Float = rightArrow.y;
+        rightArrow.y = 800;
+        FlxTween.tween(rightArrow, {y: rightOGY - 10}, 0.8, {ease: FlxEase.quartOut, startDelay: 0.2, onComplete: function(t:FlxTween)
+        {
+            FlxTween.tween(rightArrow, {y: rightArrow.y + 20}, 7, {ease: FlxEase.quartInOut, type: PINGPONG});
+        }});
 
         for(i in 0...optArray.length)
         {
@@ -83,8 +99,12 @@ class GalleryState extends MusicBeatState
             spr.shader = wiggle;
             optGrp.add(spr);
 
-            spr.y -= 10;
-            FlxTween.tween(spr, {y: spr.y + 20}, 7, {ease: FlxEase.quartInOut, type: PINGPONG, startDelay: 0.1});
+            var ogY:Float = spr.y;
+            spr.y = 800;
+            FlxTween.tween(spr, {y: ogY - 10}, 0.8, {ease: FlxEase.quartOut, startDelay: 0.1, onComplete: function(t:FlxTween)
+            {
+                FlxTween.tween(spr, {y: spr.y + 20}, 7, {ease: FlxEase.quartInOut, type: PINGPONG});
+            }});
         }
 
         barTop = new FlxSprite();
@@ -120,11 +140,26 @@ class GalleryState extends MusicBeatState
             FlxTween.tween(bfIconsTop, {alpha: 1}, 0.6);
             FlxTween.tween(bfIconsBottom, {alpha: 1}, 0.6);
         }
+        else { //intro
+            barTop.y += -barTop.height;
+            barBottom.y += barBottom.height;
+
+            bfIconsTop.alpha = 0;
+            bfIconsBottom.alpha = 0;
+
+            FlxTween.tween(barTop, {y: 0}, 0.3, {ease: FlxEase.quartOut});
+            FlxTween.tween(barBottom, {y: FlxG.height - barBottom.height}, 0.3, {ease: FlxEase.quartOut, onComplete: function(t:FlxTween)
+            {
+                FlxTween.tween(bfIconsTop, {alpha: 1}, 0.4);
+                FlxTween.tween(bfIconsBottom, {alpha: 1}, 0.4);
+            }});
+        }
 
         changeSelect();
     }
 
     var alreadyPressedSmth:Bool = false;
+    var updateArrowScale:Bool = true;
     override function update(elapsed:Float)
     {
         super.update(elapsed);
@@ -138,17 +173,47 @@ class GalleryState extends MusicBeatState
 		}
 
         var leftMult:Float = FlxMath.lerp(leftArrow.scale.x, 1, elapsed * 9);
-        leftArrow.scale.set(leftMult, leftMult);
+        if(updateArrowScale) leftArrow.scale.set(leftMult, leftMult);
 
         var rightMult:Float = FlxMath.lerp(rightArrow.scale.x, 1, elapsed * 9);
-        rightArrow.scale.set(rightMult, rightMult);
+        if(updateArrowScale) rightArrow.scale.set(rightMult, rightMult);
 
         if(!alreadyPressedSmth)
         {
             if(controls.BACK)
             {
                 alreadyPressedSmth = true;
-                MusicBeatState.switchState(new MainMenuState());
+                updateArrowScale = false;
+
+                FlxTween.cancelTweensOf(barTop);
+                FlxTween.cancelTweensOf(barBottom);
+                FlxTween.cancelTweensOf(bfIconsTop);
+                FlxTween.cancelTweensOf(bfIconsBottom);
+                FlxTween.cancelTweensOf(bg);
+                FlxTween.cancelTweensOf(lines);
+                FlxTween.cancelTweensOf(leftArrow);
+                FlxTween.cancelTweensOf(optGrp.members[curSelected]);
+                FlxTween.cancelTweensOf(rightArrow);
+
+                FlxTween.tween(barTop, {y: -barTop.height}, 0.3, {ease: FlxEase.quartOut});
+                FlxTween.tween(barBottom, {y: FlxG.height}, 0.3, {ease: FlxEase.quartOut});
+                FlxTween.tween(bfIconsTop, {y: -bfIconsTop.height}, 0.3, {ease: FlxEase.quartOut});
+                FlxTween.tween(bfIconsBottom, {y: FlxG.height}, 0.3, {ease: FlxEase.quartOut});
+
+                FlxTween.tween(bg, {alpha: 0}, 0.7);
+                FlxTween.tween(lines, {alpha: 0}, 0.7);
+                FlxTween.tween(leftArrow, {y: 800}, 0.4, {ease: FlxEase.quartOut});
+                FlxTween.tween(optGrp.members[curSelected], {y: 800}, 0.4, {ease: FlxEase.quartOut});
+                FlxTween.tween(rightArrow, {y: 800}, 0.4, {ease: FlxEase.quartOut});
+
+                StoryMenuState.backFromStoryMode = true;
+
+                new FlxTimer().start(0.8, function(t:FlxTimer)
+                {
+		    		FlxTransitionableState.skipNextTransIn = true;
+		    		FlxTransitionableState.skipNextTransOut = true;
+                    MusicBeatState.switchState(new MainMenuState());
+                });
             }
 
             if(controls.UI_RIGHT_P)
