@@ -1,7 +1,13 @@
 package backend;
 
+import flixel.util.FlxSave;
+
 class PlayedTime
 {
+    /**
+     * The save file where played time is saved
+    **/
+    public static var timeSave:FlxSave;
     /**
      * Total time you have been playing the game (in seconds)
     **/
@@ -9,8 +15,10 @@ class PlayedTime
 
     public static function loadPlayedTime():Void
     {
-        FlxG.save.data.playedTime = FlxG.save.data.playedTime == null ? 0 : FlxG.save.data.playedTime;
-        time = FlxG.save.data.playedTime;
+        timeSave = new FlxSave();
+        timeSave.bind('playedTime', CoolUtil.getSavePath());
+        timeSave.data.playedTime = timeSave.data.playedTime == null ? 0 : timeSave.data.playedTime;
+        time = timeSave.data.playedTime;
 
         #if debug 
         trace('Loaded play time (current played time is $time seconds)');
@@ -19,9 +27,12 @@ class PlayedTime
 
     public static function updateTime():Void
     {
+        // avoid crash (just in case)
+        if(timeSave == null) return;
+
         time++;
-        FlxG.save.data.playedTime = time;
-        FlxG.save.flush();
+        timeSave.data.playedTime = time;
+        timeSave.flush();
 
         #if debug 
         trace('You have played for $time seconds! (${time/60} minutes) (${time/3600} hours)');
