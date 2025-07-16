@@ -19,7 +19,7 @@ class GalleryState extends MusicBeatState
     var optGrp:FlxTypedGroup<GalleryObject>;
     var optArray:Array<String> = [
         'outdated_concepts',
-        'outdated_concepts'
+        'music'
     ];
 
 	var wiggle:WiggleEffect = null;
@@ -258,6 +258,32 @@ class GalleryState extends MusicBeatState
 		    				FlxTransitionableState.skipNextTransIn = true;
 		    				FlxTransitionableState.skipNextTransOut = true;
                             MusicBeatState.switchState(new GalleryStateImages(selectedItem));
+                        });
+                    case 'music':
+                        FlxG.sound.play(Paths.sound('confirmMenu'));
+
+                        FlxTween.cancelTweensOf(leftArrow);
+                        for(obj in optGrp)
+                        {
+                            FlxTween.cancelTweensOf(obj);
+                        }
+                        FlxTween.cancelTweensOf(rightArrow);
+
+                        FlxTween.tween(leftArrow, {y: 800}, 0.6, {ease: FlxEase.quartIn});
+                        FlxTween.tween(optGrp.members[curSelected], {y: 800}, 0.6, {ease: FlxEase.quartIn, startDelay: 0.1});
+                        FlxTween.tween(rightArrow, {y: 800}, 0.6, {ease: FlxEase.quartIn, startDelay: 0.2});
+
+                        FlxTween.tween(bfIconsTop, {alpha: 0}, 0.6);
+                        FlxTween.tween(bfIconsBottom, {alpha: 0}, 0.6);
+
+                        new FlxTimer().start(0.8, function(t:FlxTimer)
+                        {
+		    			    GalleryState.linesPos.insert(0, lines.x);
+		    			    GalleryState.linesPos.insert(1, lines.y);
+
+		    				FlxTransitionableState.skipNextTransIn = true;
+		    				FlxTransitionableState.skipNextTransOut = true;
+                            MusicBeatState.switchState(new GalleryStateMusic());
                         });
                     default:
                 }
@@ -537,5 +563,13 @@ class GalleryStateImages extends MusicBeatState
             titleText.text = imageDataArray[curSelected].name != null ? imageDataArray[curSelected].name : 'Untitled';
             descText.text = imageDataArray[curSelected].description != null ? imageDataArray[curSelected].description : 'No description available.';
         }
+    }
+}
+
+class GalleryStateMusic extends MusicBeatState
+{
+    public function new()
+    {
+        super();
     }
 }
