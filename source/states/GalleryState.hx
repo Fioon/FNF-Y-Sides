@@ -97,6 +97,7 @@ class GalleryState extends MusicBeatState
             spr.targetX = i;
             spr.x += FlxG.width * i;
             spr.shader = wiggle;
+            spr.snapToPosition();
             optGrp.add(spr);
 
             var ogY:Float = spr.y;
@@ -155,7 +156,7 @@ class GalleryState extends MusicBeatState
             }});
         }
 
-        changeSelect();
+        changeSelect(0, true);
     }
 
     var alreadyPressedSmth:Bool = false;
@@ -291,7 +292,7 @@ class GalleryState extends MusicBeatState
         }
     }
 
-    function changeSelect(change:Int = 0)
+    function changeSelect(change:Int = 0, firstTime:Bool = false)
     {
         curSelected = FlxMath.wrap(curSelected + change, 0, optArray.length - 1);
 
@@ -300,6 +301,7 @@ class GalleryState extends MusicBeatState
 			item.targetX = num - curSelected;
 			item.alpha = 0.6;
 			if (item.targetX == 0) item.alpha = 1;
+            if (firstTime) item.snapToPosition();
 		}
     }
 }
@@ -321,6 +323,11 @@ class GalleryObject extends FlxSprite
 
 		var lerpVal:Float = Math.exp(-elapsed * 9.6);
 		x = FlxMath.lerp((targetX * distancePerItem.x) + startPosition.x, x, lerpVal);
+    }
+
+    public function snapToPosition()
+    {
+        x = startPosition.x + (targetX * distancePerItem.x);
     }
 }
 
@@ -462,10 +469,11 @@ class GalleryStateImages extends MusicBeatState
             spr.startPosition = new FlxPoint(spr.x, spr.y);
             spr.targetX = num;
             spr.x += FlxG.width * num;
+            spr.snapToPosition();
             imageGrp.add(spr);
         }
 
-        changeSelect();
+        changeSelect(0, true);
     }
 
     override function create() 
@@ -538,7 +546,7 @@ class GalleryStateImages extends MusicBeatState
         }
     }
     
-    function changeSelect(change:Int = 0)
+    function changeSelect(change:Int = 0, firstTime:Bool = false)
     {
         curSelected = FlxMath.wrap(curSelected + change, 0, imageGrp.length - 1);
 
@@ -547,6 +555,7 @@ class GalleryStateImages extends MusicBeatState
 			item.targetX = num - curSelected;
 			item.alpha = 0.6;
 			if (item.targetX == 0) item.alpha = 1;
+            if (firstTime) item.snapToPosition();
 		}
 
         if(imageDataArray[curSelected] != null)
@@ -675,16 +684,10 @@ class GalleryStateMusic extends MusicBeatState
             spr.startPosition = new FlxPoint(spr.x, spr.y);
             spr.targetY = i;
             spr.y += FlxG.height * i;
-            spr.shader = wiggle;
             musicSongsGrp.add(spr);
-
-            var ogY:Float = spr.y;
-            spr.y = 800;
-            FlxTween.tween(spr, {y: ogY - 10}, 0.8, {ease: FlxEase.quartOut, startDelay: 0.1, onComplete: function(t:FlxTween)
-            {
-                FlxTween.tween(spr, {y: spr.y + 20}, 7, {ease: FlxEase.quartInOut, type: PINGPONG});
-            }});
         }
+
+        changeSelect(0, true);
     }
 
     var alreadyPressedSmth:Bool = false;
@@ -728,7 +731,7 @@ class GalleryStateMusic extends MusicBeatState
     }
     
     private static var curSelected:Int = 0;
-    function changeSelect(change:Int = 0)
+    function changeSelect(change:Int = 0, firstTime:Bool = false)
     {
         curSelected = FlxMath.wrap(curSelected + change, 0, musicSongsGrp.length - 1);
 
@@ -737,6 +740,7 @@ class GalleryStateMusic extends MusicBeatState
 			item.targetY = num - curSelected;
 			item.alpha = 0.6;
 			if (item.targetY == 0) item.alpha = 1;
+            if(firstTime) item.snapToPosition();
 		}
 
         if(FileSystem.exists('assets/songs/${musicSongsArray[curSelected]}/Full.ogg'))
@@ -756,7 +760,7 @@ class GalleryStateMusic extends MusicBeatState
 class GalleryMusicObject extends FlxSprite
 {
     public var targetY:Float = 0;
-    public var distancePerItem:FlxPoint = new FlxPoint(0, 720);
+    public var distancePerItem:FlxPoint = new FlxPoint(0, 350);
     public var startPosition:FlxPoint = new FlxPoint(0, 0);
     
     public function new(x:Float = 0, y:Float = 0, ?graphic:Dynamic = null)
@@ -770,5 +774,10 @@ class GalleryMusicObject extends FlxSprite
 
 		var lerpVal:Float = Math.exp(-elapsed * 9.6);
 		y = FlxMath.lerp((targetY * distancePerItem.y) + startPosition.y, y, lerpVal);
+    }
+
+    public function snapToPosition()
+    {
+        y = startPosition.y + (targetY * distancePerItem.y);
     }
 }
