@@ -122,6 +122,7 @@ class PlayState extends MusicBeatState
 	public var playbackRate(default, set):Float = 1;
 
 	public var boyfriendGroup:FlxSpriteGroup;
+	public var player3Group:FlxSpriteGroup;
 	public var dadGroup:FlxSpriteGroup;
 	public var gfGroup:FlxSpriteGroup;
 	public static var curStage:String = '';
@@ -158,6 +159,7 @@ class PlayState extends MusicBeatState
 	public var vocals:FlxSound;
 	public var opponentVocals:FlxSound;
 
+	public var player3:Character = null;
 	public var dad:Character = null;
 	public var gf:Character = null;
 	public var boyfriend:Character = null;
@@ -221,6 +223,7 @@ class PlayState extends MusicBeatState
 
 	public var iconP1:HealthIcon;
 	public var iconP2:HealthIcon;
+	public var iconP3:HealthIcon;
 	public var camHUD:FlxCamera;
 	public var camGame:FlxCamera;
 	public var camOther:FlxCamera;
@@ -283,6 +286,12 @@ class PlayState extends MusicBeatState
 	// Callbacks for stages
 	public var startCallback:Void->Void = null;
 	public var endCallback:Void->Void = null;
+
+	public var songsWith3Player:Array<String> = [
+		'Spookeez',
+		'South'
+	];
+	public var use3Player:Bool = false;
 
 	private static var _lastLoadedModDirectory:String = '';
 	public static var nextReloadAll:Bool = false;
@@ -394,6 +403,7 @@ class PlayState extends MusicBeatState
 
 		boyfriendGroup = new FlxSpriteGroup(BF_X, BF_Y);
 		dadGroup = new FlxSpriteGroup(DAD_X, DAD_Y);
+		player3Group = new FlxSpriteGroup(DAD_X, DAD_Y);
 		gfGroup = new FlxSpriteGroup(GF_X, GF_Y);
 
 		switch (curStage)
@@ -417,6 +427,14 @@ class PlayState extends MusicBeatState
 			gfGroup.add(gf);
 		}
 
+		for(name in songsWith3Player) if(Paths.formatToSongPath(name) == songName) use3Player = true;
+		if(use3Player)
+		{
+			player3 = new Character(0, 0, SONG.player3);
+			startCharacterPos(player3, true);
+			player3Group.add(player3);
+		}
+
 		dad = new Character(0, 0, SONG.player2);
 		startCharacterPos(dad, true);
 		dadGroup.add(dad);
@@ -431,10 +449,18 @@ class PlayState extends MusicBeatState
 			for (key => spr in list)
 				if(!StageData.reservedNames.contains(key))
 					variables.set(key, spr);
+
+			if(use3Player)
+			{
+				trace('player3 added?');
+				add(player3Group);
+				addBehindDad(player3);
+			}
 		}
 		else
 		{
 			add(gfGroup);
+			add(player3Group);
 			add(dadGroup);
 			add(boyfriendGroup);
 		}
@@ -476,6 +502,7 @@ class PlayState extends MusicBeatState
 
 		// CHARACTER SCRIPTS
 		if(gf != null) startCharacterScripts(gf.curCharacter);
+		if(player3 != null) startCharacterScripts(player3.curCharacter);
 		startCharacterScripts(dad.curCharacter);
 		startCharacterScripts(boyfriend.curCharacter);
 		#end
@@ -597,6 +624,19 @@ class PlayState extends MusicBeatState
 		iconP2.visible = !ClientPrefs.data.hideHud;
 		iconP2.alpha = ClientPrefs.data.healthBarAlpha;
 		uiGroup.add(iconP2);
+
+		if(use3Player)
+		{
+			iconP3 = new HealthIcon(player3.healthIcon, false);
+			iconP3.y = healthBar.y + (healthBar.height / 2) - (iconP3.height / 2);
+			iconP3.visible = !ClientPrefs.data.hideHud;
+			iconP3.alpha = ClientPrefs.data.healthBarAlpha;
+			uiGroup.add(iconP3);
+		}
+		else
+		{
+			iconP3 = null;
+		}
 
 		healthBarArrow = new FlxSprite();
 		healthBarArrow.loadGraphic(Paths.image('hud/healthBar_arrow'));
@@ -2194,6 +2234,13 @@ class PlayState extends MusicBeatState
 		var mult:Float = FlxMath.lerp(1, iconP2.scale.x, Math.exp(-elapsed * 9 * playbackRate));
 		iconP2.scale.set(mult, mult);
 		iconP2.updateHitbox();
+
+		if(iconP3 != null) 
+		{
+			var mult:Float = FlxMath.lerp(1, iconP3.scale.x, Math.exp(-elapsed * 9 * playbackRate));
+			iconP3.scale.set(mult, mult);
+			iconP3.updateHitbox();
+		}
 	}
 
 	public dynamic function updateIconsPosition()
@@ -2206,6 +2253,7 @@ class PlayState extends MusicBeatState
 
 		iconP1.x = healthBar.x + healthBar.width - 20;
 		iconP2.x = healthBar.x - iconOffset - 105;
+		if(iconP3 != null) iconP3.x = healthBar.x - iconOffset - 105;
 	}
 
 	var iconsAnimations:Bool = true;
@@ -3433,6 +3481,7 @@ class PlayState extends MusicBeatState
 		else if(!note.noAnimation)
 		{
 			var char:Character = dad;
+			if(note.thirdPlayerNote && player3 != null) char = player3;
 			var animToPlay:String = singAnimations[Std.int(Math.abs(Math.min(singAnimations.length-1, note.noteData)))] + note.animSuffix;
 			if(note.gfNote) char = gf;
 
@@ -3464,18 +3513,37 @@ class PlayState extends MusicBeatState
 	
 				if(!SONG.notes[curSection].mustHitSection)
 				{
-					switch(animToPlay)
+					if(note.thirdPlayerNote)
 					{
-						case 'singLEFT':
-							camFollow.setPosition(dad.getMidpoint().x + 150 + (dad.cameraPosition[0] + opponentCameraOffset[0]) - cameraOffset, dad.getMidpoint().y - 100 + (dad.cameraPosition[1] + opponentCameraOffset[1]));
-						case 'singRIGHT':
-							camFollow.setPosition(dad.getMidpoint().x + 150 + (dad.cameraPosition[0] + opponentCameraOffset[0]) + cameraOffset, dad.getMidpoint().y - 100 + (dad.cameraPosition[1] + opponentCameraOffset[1]));
-						case 'singDOWN':
-							camFollow.setPosition(dad.getMidpoint().x + 150 + (dad.cameraPosition[0] + opponentCameraOffset[0]), dad.getMidpoint().y - 100 + (dad.cameraPosition[1] + opponentCameraOffset[1] + cameraOffset));
-						case 'singUP':
-							camFollow.setPosition(dad.getMidpoint().x + 150 + (dad.cameraPosition[0] + opponentCameraOffset[0]), dad.getMidpoint().y - 100 + (dad.cameraPosition[1] + opponentCameraOffset[1] - cameraOffset));
-						default:
-							camFollow.setPosition(dad.getMidpoint().x + 150 + (dad.cameraPosition[0] + opponentCameraOffset[0]), dad.getMidpoint().y - 100 + (dad.cameraPosition[1] + opponentCameraOffset[1]));
+						switch(animToPlay)
+						{
+							case 'singLEFT':
+								camFollow.setPosition(player3.getMidpoint().x + 150 + (player3.cameraPosition[0] + opponentCameraOffset[0]) - cameraOffset, player3.getMidpoint().y - 100 + (player3.cameraPosition[1] + opponentCameraOffset[1]));
+							case 'singRIGHT':
+								camFollow.setPosition(player3.getMidpoint().x + 150 + (player3.cameraPosition[0] + opponentCameraOffset[0]) + cameraOffset, player3.getMidpoint().y - 100 + (player3.cameraPosition[1] + opponentCameraOffset[1]));
+							case 'singDOWN':
+								camFollow.setPosition(player3.getMidpoint().x + 150 + (player3.cameraPosition[0] + opponentCameraOffset[0]), player3.getMidpoint().y - 100 + (player3.cameraPosition[1] + opponentCameraOffset[1] + cameraOffset));
+							case 'singUP':
+								camFollow.setPosition(player3.getMidpoint().x + 150 + (player3.cameraPosition[0] + opponentCameraOffset[0]), player3.getMidpoint().y - 100 + (player3.cameraPosition[1] + opponentCameraOffset[1] - cameraOffset));
+							default:
+								camFollow.setPosition(player3.getMidpoint().x + 150 + (player3.cameraPosition[0] + opponentCameraOffset[0]), player3.getMidpoint().y - 100 + (player3.cameraPosition[1] + opponentCameraOffset[1]));
+						}
+					}
+					else
+					{
+						switch(animToPlay)
+						{
+							case 'singLEFT':
+								camFollow.setPosition(dad.getMidpoint().x + 150 + (dad.cameraPosition[0] + opponentCameraOffset[0]) - cameraOffset, dad.getMidpoint().y - 100 + (dad.cameraPosition[1] + opponentCameraOffset[1]));
+							case 'singRIGHT':
+								camFollow.setPosition(dad.getMidpoint().x + 150 + (dad.cameraPosition[0] + opponentCameraOffset[0]) + cameraOffset, dad.getMidpoint().y - 100 + (dad.cameraPosition[1] + opponentCameraOffset[1]));
+							case 'singDOWN':
+								camFollow.setPosition(dad.getMidpoint().x + 150 + (dad.cameraPosition[0] + opponentCameraOffset[0]), dad.getMidpoint().y - 100 + (dad.cameraPosition[1] + opponentCameraOffset[1] + cameraOffset));
+							case 'singUP':
+								camFollow.setPosition(dad.getMidpoint().x + 150 + (dad.cameraPosition[0] + opponentCameraOffset[0]), dad.getMidpoint().y - 100 + (dad.cameraPosition[1] + opponentCameraOffset[1] - cameraOffset));
+							default:
+								camFollow.setPosition(dad.getMidpoint().x + 150 + (dad.cameraPosition[0] + opponentCameraOffset[0]), dad.getMidpoint().y - 100 + (dad.cameraPosition[1] + opponentCameraOffset[1]));
+						}
 					}
 				}
 
@@ -3785,9 +3853,11 @@ class PlayState extends MusicBeatState
 
 		iconP1.scale.set(1.2, 1.2);
 		iconP2.scale.set(1.2, 1.2);
+		iconP3.scale.set(1.2, 1.2);
 
 		iconP1.updateHitbox();
 		iconP2.updateHitbox();
+		iconP3.updateHitbox();
 
 		characterBopper(curBeat);
 
@@ -3812,6 +3882,9 @@ class PlayState extends MusicBeatState
 		}
 		if (dad != null && beat % dad.danceEveryNumBeats == 0 && !dad.getAnimationName().startsWith('sing') && !dad.stunned)
 			dad.dance();
+		
+		if (player3 != null && beat % player3.danceEveryNumBeats == 0 && !player3.getAnimationName().startsWith('sing') && !player3.stunned)
+			player3.dance();
 	}
 
 	public function playerDance():Void

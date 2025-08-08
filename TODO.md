@@ -62,7 +62,7 @@
 - [ ] Girlfriend (SPOOKY VERSION)
 - [x] Boyfriend (SPOOKY VERSION)
 - [x] Boyfriend Death (SPOOKY VERSION)
-- [HALF] Spooky kids
+- [x] Spooky kids
 - [ ] Monster
 - [ ] Pico
 

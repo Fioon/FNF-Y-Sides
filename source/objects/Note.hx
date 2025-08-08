@@ -46,7 +46,8 @@ class Note extends FlxSprite
 		'Hey!',
 		'Hurt Note',
 		'GF Sing',
-		'No Animation'
+		'No Animation',
+		'Third Player Note'
 	];
 
 	public var extraData:Map<String, Dynamic> = new Map<String, Dynamic>();
@@ -89,6 +90,7 @@ class Note extends FlxSprite
 
 	public var animSuffix:String = '';
 	public var gfNote:Bool = false;
+	public var thirdPlayerNote:Bool = false;
 	public var earlyHitMult:Float = 1;
 	public var lateHitMult:Float = 1;
 	public var lowPriority:Bool = false;
@@ -225,6 +227,8 @@ class Note extends FlxSprite
 					noMissAnimation = true;
 				case 'GF Sing':
 					gfNote = true;
+				case 'Third Player Note':
+					thirdPlayerNote = true;
 			}
 			if (value != null && value.length > 1) NoteTypesConfig.applyNoteTypeData(this, value);
 			if (hitsound != 'hitsound' && hitsoundVolume > 0) Paths.sound(hitsound); //precache new sound for being idiot-proof

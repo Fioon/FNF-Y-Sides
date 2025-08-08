@@ -601,6 +601,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 
 			player1: 'bf',
 			player2: 'dad',
+			player3: null,
 			gfVersion: 'gf',
 			stage: 'stage',
 			format: 'psych_v1'
