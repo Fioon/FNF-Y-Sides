@@ -616,12 +616,14 @@ class PlayState extends MusicBeatState
 		uiGroup.add(fcSprite);
 
 		iconP1 = new HealthIcon(boyfriend.healthIcon, true);
+		iconP1.x = healthBar.x + healthBar.width - 20;
 		iconP1.y = healthBar.y + (healthBar.height / 2) - (iconP1.height / 2);
 		iconP1.visible = !ClientPrefs.data.hideHud;
 		iconP1.alpha = ClientPrefs.data.healthBarAlpha;
 		uiGroup.add(iconP1);
 
 		iconP2 = new HealthIcon(dad.healthIcon, false);
+		iconP2.x = healthBar.x - iconOffset - 105;
 		iconP2.y = healthBar.y + (healthBar.height / 2) - (iconP2.height / 2);
 		iconP2.visible = !ClientPrefs.data.hideHud;
 		iconP2.alpha = ClientPrefs.data.healthBarAlpha;
@@ -631,6 +633,7 @@ class PlayState extends MusicBeatState
 		if(use3Player)
 		{
 			iconP3 = new HealthIcon(player3.healthIcon, false);
+			iconP3.x = healthBar.x - iconOffset - 105;
 			iconP3.y = healthBar.y + (healthBar.height / 2) - (iconP3.height / 2);
 			iconP3.visible = !ClientPrefs.data.hideHud;
 			iconP3.alpha = ClientPrefs.data.healthBarAlpha;
@@ -801,6 +804,8 @@ class PlayState extends MusicBeatState
 
 		super.create();
 		Paths.clearUnusedMemory();
+
+		swapIcons(false);
 
 		cacheCountdown();
 		cachePopUpScore();
@@ -2231,33 +2236,38 @@ class PlayState extends MusicBeatState
 	// Health icon updaters
 	public dynamic function updateIconsScale(elapsed:Float)
 	{
-		var mult:Float = FlxMath.lerp(1, iconP1.scale.x, Math.exp(-elapsed * 9 * playbackRate));
-		iconP1.scale.set(mult, mult);
-		iconP1.updateHitbox();
+		if(iconP1.bops)
+		{
+			var mult:Float = FlxMath.lerp(1, iconP1.scale.x, Math.exp(-elapsed * 9 * playbackRate));
+			iconP1.scale.set(mult, mult);
+			iconP1.updateHitbox();
+		}
 
-		var mult:Float = FlxMath.lerp(1, iconP2.scale.x, Math.exp(-elapsed * 9 * playbackRate));
-		iconP2.scale.set(mult, mult);
-		iconP2.updateHitbox();
+		if(iconP2.bops)
+		{
+			var mult:Float = FlxMath.lerp(1, iconP2.scale.x, Math.exp(-elapsed * 9 * playbackRate));
+			iconP2.scale.set(mult, mult);
+			iconP2.updateHitbox();
+		}
 
 		if(iconP3 != null) 
 		{
-			var mult:Float = FlxMath.lerp(1, iconP3.scale.x, Math.exp(-elapsed * 9 * playbackRate));
-			iconP3.scale.set(mult, mult);
-			iconP3.updateHitbox();
+			if(iconP3.bops)
+			{
+				var mult:Float = FlxMath.lerp(1, iconP3.scale.x, Math.exp(-elapsed * 9 * playbackRate));
+				iconP3.scale.set(mult, mult);
+				iconP3.updateHitbox();
+			}
 		}
 	}
 
+	var iconOffset:Int = 26;
 	public dynamic function updateIconsPosition()
 	{
-		var iconOffset:Int = 26;
 		//iconP1.x = healthBar.barCenter + (150 * iconP1.scale.x - 150) / 2 - iconOffset;
 		//iconP2.x = healthBar.barCenter - (150 * iconP2.scale.x) / 2 - iconOffset * 2;
 
 		healthBarArrow.x = healthBar.barCenter - (healthBarArrow.width / 2);
-
-		iconP1.x = healthBar.x + healthBar.width - 20;
-		iconP2.x = healthBar.x - iconOffset - 105;
-		if(iconP3 != null) iconP3.x = healthBar.x - iconOffset - 105;
 	}
 
 	var iconsAnimations:Bool = true;
@@ -3503,7 +3513,9 @@ class PlayState extends MusicBeatState
 				pointsTo3Player = true;
 				char = player3;
 			}
-			
+
+			if(iconP3 != null) swapIcons(note.thirdPlayerNote);
+
 			var animToPlay:String = singAnimations[Std.int(Math.abs(Math.min(singAnimations.length-1, note.noteData)))] + note.animSuffix;
 			if(note.gfNote) char = gf;
 
@@ -3707,6 +3719,60 @@ class PlayState extends MusicBeatState
 		if(!note.isSustainNote) invalidateNote(note);
 	}
 
+	var swappedIcons:Null<Bool> = null;
+	function swapIcons(player3Sings:Bool)
+	{
+		if(swappedIcons == player3Sings) return; // already swapped
+		swappedIcons = player3Sings;
+
+		var noPlayableIconScale:Float = 0.7;
+
+		if(player3Sings)
+		{
+			iconP2.color = 0xFF666666;
+			iconP2.bops = false;
+			iconP2.scale.set(noPlayableIconScale, noPlayableIconScale);
+			iconP2.updateHitbox();
+			iconP2.x = healthBar.x - iconOffset - 150;
+			iconP2.y = healthBar.y + (healthBar.height / 2) - (iconP2.height / 2) + 15;
+
+			uiGroup.remove(iconP2);
+			uiGroup.insert(6, iconP2);
+
+			iconP3.color = 0xFFFFFFFF;
+			iconP3.bops = true;
+			iconP3.scale.set(1, 1);
+			iconP3.updateHitbox();
+			iconP3.x = healthBar.x - iconOffset - 105;
+			iconP3.y = healthBar.y + (healthBar.height / 2) - (iconP3.height / 2);
+
+			uiGroup.remove(iconP3);
+			uiGroup.insert(7, iconP3);
+		}
+		else
+		{
+			iconP2.color = 0xFFFFFFFF;
+			iconP2.bops = true;
+			iconP2.scale.set(1, 1);
+			iconP2.updateHitbox();
+			iconP2.x = healthBar.x - iconOffset - 105;
+			iconP2.y = healthBar.y + (healthBar.height / 2) - (iconP2.height / 2);
+
+			uiGroup.remove(iconP2);
+			uiGroup.insert(7, iconP2);
+
+			iconP3.color = 0xFF666666;
+			iconP3.bops = false;
+			iconP3.scale.set(noPlayableIconScale, noPlayableIconScale);
+			iconP3.updateHitbox();
+			iconP3.x = healthBar.x - iconOffset - 150;
+			iconP3.y = healthBar.y + (healthBar.height / 2) - (iconP3.height / 2) + 15;
+
+			uiGroup.remove(iconP3);
+			uiGroup.insert(6, iconP3);
+		}
+	}
+
 	public function invalidateNote(note:Note):Void {
 		note.kill();
 		notes.remove(note, true);
@@ -3873,9 +3939,12 @@ class PlayState extends MusicBeatState
 		if (generatedMusic)
 			notes.sort(FlxSort.byY, ClientPrefs.data.downScroll ? FlxSort.ASCENDING : FlxSort.DESCENDING);
 
-		iconP1.scale.set(1.05, 1.05);
-		iconP2.scale.set(1.05, 1.05);
-		if(iconP3 != null) iconP3.scale.set(1.05, 1.05);
+		if(iconP1.bops) iconP1.scale.set(1.05, 1.05);
+		if(iconP2.bops) iconP2.scale.set(1.05, 1.05);
+		if(iconP3 != null) 
+		{
+			if(iconP3.bops) iconP3.scale.set(1.05, 1.05);
+		}
 
 		iconP1.updateHitbox();
 		iconP2.updateHitbox();
