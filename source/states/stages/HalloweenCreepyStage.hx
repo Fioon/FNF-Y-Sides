@@ -2,6 +2,7 @@ package states.stages;
 
 import openfl.filters.ShaderFilter;
 import shaders.BloomShader;
+import shaders.DropShadowShader;
 
 class HalloweenCreepyStage extends BaseStage
 {
@@ -34,5 +35,47 @@ class HalloweenCreepyStage extends BaseStage
 
                 var shaderFilter = new ShaderFilter(bloom);
                 FlxG.camera.filters = [shaderFilter];
+
+                // lights on characters
+                var rimBF = new DropShadowShader();
+                rimBF.setAdjustColor(-46, -38, -25, -20);
+                rimBF.color = 0xFFE9001F;
+                game.boyfriend.shader = rimBF;
+                rimBF.attachedSprite = game.boyfriend;
+                
+                game.boyfriend.animation.callback = function() {
+                  if (game.boyfriend != null)
+                  {
+                    rimBF.updateFrameInfo(game.boyfriend.frame);
+                  }
+                };
+
+                var rimGF = new DropShadowShader();
+                rimGF.setAdjustColor(-46, -38, -25, -20);
+                rimGF.color = 0xFFE9001F;
+                game.gf.shader = rimGF;
+                rimGF.attachedSprite = game.gf;
+                rimGF.distance = 10;
+                
+                game.gf.animation.callback = function() {
+                  if (game.gf != null)
+                  {
+                    rimGF.updateFrameInfo(game.gf.frame);
+                  }
+                };
+
+                var rimDad = new DropShadowShader();
+                rimDad.setAdjustColor(-46, -38, -25, -20);
+                rimDad.color = 0xFFE9001F;
+                game.dad.shader = rimDad;
+                rimDad.attachedSprite = game.dad;
+                rimDad.angle = 180;
+                
+                game.dad.animation.callback = function() {
+                  if (game.dad != null)
+                  {
+                    rimDad.updateFrameInfo(game.dad.frame);
+                  }
+                };
 	}
 }
