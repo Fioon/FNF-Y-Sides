@@ -688,7 +688,21 @@ class GalleryStateMusic extends MusicBeatState
             musicSongsGrp.add(spr);
         }
 
+        preloadMusic();
         changeSelect(0, true);
+    }
+
+    var preloadedMusicMap:Map<String, FlxSound> = new Map<String, FlxSound>();
+    function preloadMusic()
+    {
+        for(song in musicSongsArray)
+        {
+            if(!FileSystem.exists('assets/songs/$song/Full.ogg')) continue;
+
+            var embedMusic = new FlxSound();
+            embedMusic.loadEmbedded('assets/songs/$song/Full.ogg');
+            preloadedMusicMap.set(song, embedMusic);
+        }
     }
 
     var alreadyPressedSmth:Bool = false;
@@ -747,7 +761,11 @@ class GalleryStateMusic extends MusicBeatState
         if(FileSystem.exists('assets/songs/${musicSongsArray[curSelected]}/Full.ogg'))
         {
             FlxG.sound.music.stop();
-            FlxG.sound.playMusic('assets/songs/${musicSongsArray[curSelected]}/Full.ogg');
+            //FlxG.sound.playMusic('assets/songs/${musicSongsArray[curSelected]}/Full.ogg');
+            var music = preloadedMusicMap.get(musicSongsArray[curSelected]);
+            
+		    @:privateAccess
+            FlxG.sound.playMusic(music._sound);
         }
         else
         {
