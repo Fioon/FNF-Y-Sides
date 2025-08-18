@@ -3790,6 +3790,10 @@ class PlayState extends MusicBeatState
 			uiGroup.remove(iconP2);
 			uiGroup.insert(6, iconP2);
 
+			FlxTween.cancelTweensOf(healthBar.leftBar);
+			var icon3Color = FlxColor.fromRGB(player3.healthColorArray[0], player3.healthColorArray[1], player3.healthColorArray[2]);
+			FlxTween.color(healthBar.leftBar, time, healthBar.leftBar.color, icon3Color, {ease: FlxEase.quartOut});
+
 			FlxTween.cancelTweensOf(iconP2);
 			FlxTween.color(iconP2, time, iconP2.color, 0xFF666666, {ease: FlxEase.quartOut});
 			FlxTween.tween(iconP2, {"scale.x": noPlayableIconScale, "scale.y": noPlayableIconScale}, time, {ease: FlxEase.quartOut});
@@ -3811,6 +3815,10 @@ class PlayState extends MusicBeatState
 			iconP2.bops = true;
 			uiGroup.remove(iconP2);
 			uiGroup.insert(7, iconP2);
+
+			FlxTween.cancelTweensOf(healthBar.leftBar);
+			var dadColor = FlxColor.fromRGB(dad.healthColorArray[0], dad.healthColorArray[1], dad.healthColorArray[2]);
+			FlxTween.color(healthBar.leftBar, time, healthBar.leftBar.color, dadColor, {ease: FlxEase.quartOut});
 
 			FlxTween.cancelTweensOf(iconP2);
 			FlxTween.color(iconP2, time, 0xFF666666, 0xFFFFFFFF, {ease: FlxEase.quartOut});
