@@ -34,7 +34,7 @@ import states.editors.CharacterEditorState;
 
 import substates.PauseSubState;
 import substates.GameOverSubstate;
-import substates.WinScreen;
+import substates.ResultsScreen;
 
 #if !flash
 import openfl.filters.ShaderFilter;
@@ -2993,7 +2993,7 @@ class PlayState extends MusicBeatState
 
 				if (storyPlaylist.length <= 0)
 				{
-					winScreen();
+					openResultsScreen();
 
 					/*
 					Mods.loadTopMod();
@@ -3040,7 +3040,7 @@ class PlayState extends MusicBeatState
 			}
 			else
 			{
-				winScreen();
+				openResultsScreen();
 
 				trace('WENT BACK TO FREEPLAY??');
 				Mods.loadTopMod();
@@ -3058,7 +3058,7 @@ class PlayState extends MusicBeatState
 		return true;
 	}
 
-	public function winScreen():Void
+	public function openResultsScreen():Void
 	{
 		persistentUpdate = false;
 		persistentDraw = true;
@@ -3071,9 +3071,9 @@ class PlayState extends MusicBeatState
 
 		FlxTween.tween(shit, {alpha: 1}, 0.4);
 			
-		var winScreen = new WinScreen();
-		winScreen.cameras = [camOther];
-		openSubState(winScreen);
+		var resultsScreen = new ResultsScreen();
+		resultsScreen.cameras = [camOther];
+		openSubState(resultsScreen);
 
 		camHUD.alpha = 0;
 		trace('you win omfg');
