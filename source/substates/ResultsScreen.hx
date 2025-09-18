@@ -17,7 +17,14 @@ class ResultsScreen extends MusicBeatSubstate
 
         var patternDown = new ResultsScreenPattern(0, 0);
         patternDown.y = FlxG.height - patternDown.height;
+        patternDown.velocity.set(10, 0);
         add(patternDown);
+
+        var patternUp = new ResultsScreenPattern(0, 0, true);
+        patternUp.y = 0;
+        patternUp.flipY = true;
+        patternUp.velocity.set(-10, 0);
+        add(patternUp);
     }
 
     override function update(elapsed:Float)
@@ -50,7 +57,7 @@ class ResultsScreenPattern extends FlxSpriteGroup
     var darkPattern:FlxBackdrop;
     var lightPattern:FlxBackdrop;
 
-    public function new(x:Float, y:Float)
+    public function new(x:Float, y:Float, flipPatternY:Bool = false)
     {
         super(x, y);
 
@@ -58,6 +65,7 @@ class ResultsScreenPattern extends FlxSpriteGroup
         add(darkPattern);
 
         lightPattern = new FlxBackdrop(Paths.image('resultsScreen/newResultsScreen/lettaBoxLight'), #if (flixel <= "5.0.0") 0.2, 0.2, true, true #else X #end);
+        lightPattern.y = flipPatternY ? darkPattern.y : darkPattern.y + darkPattern.height - lightPattern.height;
         add(lightPattern);
     }
 }
