@@ -66,21 +66,21 @@ class PauseSubState extends MusicBeatSubstate
 		add(barBottom);
 
 		// Info canción
-		var levelInfo:FlxText = new FlxText(20, 20, 0, PlayState.SONG.song, 32);
-		levelInfo.x -= 50;
-		levelInfo.alpha = 0;
+		var levelInfo:FlxText = new FlxText(20, 120, 0, PlayState.SONG.song, 32);
+		levelInfo.x = 50;
+		//levelInfo.alpha = 0;
 		levelInfo.setFormat(Paths.font("FredokaOne-Regular.ttf"), 32, FlxColor.WHITE);
 		add(levelInfo);
 
-		var levelDifficulty:FlxText = new FlxText(20, 60, 0, Difficulty.getString().toUpperCase(), 28);
-		levelDifficulty.x -= 50;
-		levelDifficulty.alpha = 0;
+		var levelDifficulty:FlxText = new FlxText(20, levelInfo.y + levelInfo.height + 10, 0, Difficulty.getString().toUpperCase(), 28);
+		levelDifficulty.x = 50;
+		//levelDifficulty.alpha = 0;
 		levelDifficulty.setFormat(Paths.font("FredokaOne-Regular.ttf"), 28, FlxColor.WHITE);
 		add(levelDifficulty);
 
-		var blueballedTxt:FlxText = new FlxText(20, 100, 0, "Blueballed: " + PlayState.deathCounter, 28);
-		blueballedTxt.x -= 50;
-		blueballedTxt.alpha = 0;
+		var blueballedTxt:FlxText = new FlxText(20, levelDifficulty.y + levelDifficulty.height + 10, 0, "Blueballed: " + PlayState.deathCounter, 28);
+		blueballedTxt.x = 50;
+		//blueballedTxt.alpha = 0;
 		blueballedTxt.setFormat(Paths.font("FredokaOne-Regular.ttf"), 28, FlxColor.WHITE);
 		add(blueballedTxt);
 
