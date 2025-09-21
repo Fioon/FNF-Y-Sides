@@ -64,7 +64,7 @@
 - [x] Boyfriend Death (SPOOKY VERSION)
 - [x] Spooky kids
 - [ ] Monster
-- [ ] Pico
+- [x] Pico
 
 ## HUD
 
@@ -85,6 +85,9 @@
     - [ ] ENHANCEMENT: Improve sub-states where roles of each developer and their social medias are displayed
 
 ## OTHER
+
+- [x] Background (Week 2)
+- [x] Background (Week 3)
 
 - [ ] Cutscene???
 
