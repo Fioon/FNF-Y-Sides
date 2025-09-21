@@ -43,6 +43,7 @@ class PauseSubState extends MusicBeatSubstate
 		bg.updateHitbox();
 		bg.alpha = 0; // empieza invisible para el fade in
 		bg.scrollFactor.set();
+		bg.antialiasing = ClientPrefs.data.antialiasing;
 		add(bg);
 
 		dots = new FlxBackdrop(Paths.image('pause/bgsos'), XY);
@@ -70,18 +71,21 @@ class PauseSubState extends MusicBeatSubstate
 		levelInfo.x = 50;
 		//levelInfo.alpha = 0;
 		levelInfo.setFormat(Paths.font("FredokaOne-Regular.ttf"), 32, FlxColor.WHITE);
+		levelInfo.antialiasing = ClientPrefs.data.antialiasing;
 		add(levelInfo);
 
 		var levelDifficulty:FlxText = new FlxText(20, levelInfo.y + levelInfo.height + 10, 0, Difficulty.getString().toUpperCase(), 28);
 		levelDifficulty.x = 50;
 		//levelDifficulty.alpha = 0;
 		levelDifficulty.setFormat(Paths.font("FredokaOne-Regular.ttf"), 28, FlxColor.WHITE);
+		levelDifficulty.antialiasing = ClientPrefs.data.antialiasing;
 		add(levelDifficulty);
 
 		var blueballedTxt:FlxText = new FlxText(20, levelDifficulty.y + levelDifficulty.height + 10, 0, "Blueballed: " + PlayState.deathCounter, 28);
 		blueballedTxt.x = 50;
 		//blueballedTxt.alpha = 0;
 		blueballedTxt.setFormat(Paths.font("FredokaOne-Regular.ttf"), 28, FlxColor.WHITE);
+		blueballedTxt.antialiasing = ClientPrefs.data.antialiasing;
 		add(blueballedTxt);
 
 		// Grupo de sprites del menú
@@ -236,6 +240,7 @@ class PauseSubState extends MusicBeatSubstate
 			item.y += 100;
 			item.scale.set(1, 1);
 			item.alpha = 0.6;
+			item.antialiasing = ClientPrefs.data.antialiasing;
 			grpMenuItems.add(item);
 		}
 
