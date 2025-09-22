@@ -46,13 +46,13 @@ class PauseSubState extends MusicBeatSubstate
 		bg.antialiasing = ClientPrefs.data.antialiasing;
 		add(bg);
 
-		dots = new FlxBackdrop(Paths.image('pause/bgsos'), XY);
-		dots.velocity.set(40, 40);
+		dots = new FlxBackdrop(Paths.image('gallery/lines'), XY);
+		dots.velocity.set(10, 10);
 		dots.alpha = 0;
 		dots.antialiasing = ClientPrefs.data.antialiasing;
 		add(dots);
 
-		FlxTween.tween(dots, {alpha: 1}, 0.5, {ease: FlxEase.linear});
+		FlxTween.tween(dots, {alpha: 0.25}, 0.5, {ease: FlxEase.linear});
 
 		barTop = new FlxSprite();
         barTop.loadGraphic(Paths.image('pause/up'));
