@@ -155,7 +155,7 @@ class MainMenuState extends MusicBeatState
 
 		for(num => option in optionShit2)
 		{
-			var item:FlxSprite = createMenuItem(option, FlxG.width + 10, (num * 155) + 200, true);
+			var item:FlxSprite = createMenuItem(option, FlxG.width + 10, (num * 155) + 170, true);
 			item.scale.set(scale, scale);
 			item.updateHitbox();
 

@@ -1,17 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TextureAtlas imagePath="menu_awards.png">
+<TextureAtlas imagePath="menu_gallery.png">
 	<!-- Created with Adobe Animate version 22.0.2.168 -->
 	<!-- http://www.adobe.com/products/animate.html -->
-	<SubTexture name="awards basic0000" x="5" y="5" width="145" height="146"/>
-	<SubTexture name="awards basic0001" x="5" y="5" width="145" height="146"/>
-	<SubTexture name="awards basic0002" x="5" y="5" width="145" height="146"/>
-	<SubTexture name="awards basic0003" x="5" y="5" width="145" height="146"/>
-	<SubTexture name="awards basic0004" x="166" y="5" width="145" height="146"/>
-	<SubTexture name="awards basic0005" x="166" y="5" width="145" height="146"/>
-	<SubTexture name="awards basic0006" x="166" y="5" width="145" height="146"/>
-	<SubTexture name="awards basic0007" x="166" y="5" width="145" height="146"/>
-	<SubTexture name="awards white0000" x="327" y="5" width="145" height="146"/>
-	<SubTexture name="awards white0001" x="327" y="5" width="145" height="146"/>
-	<SubTexture name="awards white0002" x="5" y="167" width="145" height="146"/>
-	<SubTexture name="awards white0003" x="5" y="167" width="145" height="146"/>
+	<SubTexture name="gallery basic0000" x="5" y="5" width="116" height="121"/>
+	<SubTexture name="gallery basic0001" x="5" y="5" width="116" height="121"/>
+	<SubTexture name="gallery basic0002" x="5" y="5" width="116" height="121"/>
+	<SubTexture name="gallery basic0003" x="5" y="5" width="116" height="121"/>
+	<SubTexture name="gallery basic0004" x="159" y="5" width="116" height="120" frameX="0" frameY="-1" frameWidth="116" frameHeight="121"/>
+	<SubTexture name="gallery basic0005" x="159" y="5" width="116" height="120" frameX="0" frameY="-1" frameWidth="116" frameHeight="121"/>
+	<SubTexture name="gallery basic0006" x="159" y="5" width="116" height="120" frameX="0" frameY="-1" frameWidth="116" frameHeight="121"/>
+	<SubTexture name="gallery basic0007" x="159" y="5" width="116" height="120" frameX="0" frameY="-1" frameWidth="116" frameHeight="121"/>
+	<SubTexture name="gallery white0000" x="313" y="5" width="116" height="121"/>
+	<SubTexture name="gallery white0001" x="313" y="5" width="116" height="121"/>
+	<SubTexture name="gallery white0002" x="5" y="164" width="116" height="120" frameX="0" frameY="-1" frameWidth="116" frameHeight="121"/>
+	<SubTexture name="gallery white0003" x="5" y="164" width="116" height="120" frameX="0" frameY="-1" frameWidth="116" frameHeight="121"/>
 </TextureAtlas>
