@@ -94,18 +94,18 @@ class ResultsScreen extends MusicBeatSubstate
 
         boyfriend.x = board.x - 380;
 
-        scoreTxt = new FlxText(0, board.y + 20, 0, "SCORE: " + PlayState.instance.songScore);
-        scoreTxt.setFormat(Paths.font('FredokaOne-Regular.ttf'), 32, 0xFFB996D4, 'center');
+        scoreTxt = new FlxText(0, board.y + 30, 0, "SCORE: " + PlayState.instance.songScore);
+        scoreTxt.setFormat(Paths.font('FredokaOne-Regular.ttf'), 28, 0xFFB996D4, LEFT);
         scoreTxt.x = board.x + 25;
         add(scoreTxt);
 
-        missesTxt = new FlxText(0, scoreTxt.y + 45, 0, "MISSES: " + PlayState.instance.songMisses);
-        missesTxt.setFormat(Paths.font('FredokaOne-Regular.ttf'), 32, 0xFFB996D4, 'center');
+        missesTxt = new FlxText(board.x + 30, scoreTxt.y, board.width - 80, "MISSES: " + PlayState.instance.songMisses);
+        missesTxt.setFormat(Paths.font('FredokaOne-Regular.ttf'), 28, 0xFFB996D4, RIGHT);
         missesTxt.x = board.x + 25;
         add(missesTxt);
 
         ratingTxt = new FlxText(0, missesTxt.y + 45, 0, "RATING: " + rating);
-        ratingTxt.setFormat(Paths.font('FredokaOne-Regular.ttf'), 32, 0xFFB996D4, 'center');
+        ratingTxt.setFormat(Paths.font('FredokaOne-Regular.ttf'), 28, 0xFFB996D4, 'center');
         ratingTxt.x = board.x + 25;
         add(ratingTxt);
 
