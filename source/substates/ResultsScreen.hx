@@ -50,6 +50,7 @@ class ResultsScreen extends MusicBeatSubstate
         rank = new ResultsScreenRank(0, 0, getRankName());
 
         FlxG.sound.playMusic(Paths.music(getRankName() == 'e' ? 'winScreenbad' : 'winScreen'));
+        Conductor.bpm = getRankName() == 'e' ? 105 : 127;
 
         var bg = new FlxSprite();
         bg.makeGraphic(FlxG.width, FlxG.height, 0xFFCFC6F3);
