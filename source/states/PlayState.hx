@@ -3061,7 +3061,7 @@ class PlayState extends MusicBeatState
 	public function openResultsScreen():Void
 	{
 		persistentUpdate = false;
-		persistentDraw = true;
+		persistentDraw = false;
 
 		var shit:FlxSprite = new FlxSprite();
 		shit.makeGraphic(1280, 720, 0xFF000000);
@@ -3074,6 +3074,9 @@ class PlayState extends MusicBeatState
 		var resultsScreen = new ResultsScreen();
 		resultsScreen.cameras = [camOther];
 		openSubState(resultsScreen);
+
+		FlxG.sound.music.pause();
+		FlxG.sound.music.time = 0;
 
 		camHUD.alpha = 0;
 		trace('you win omfg');

@@ -48,6 +48,8 @@ class ResultsScreen extends MusicBeatSubstate
     var rank:ResultsScreenRank;
     var rankName:String = "";
 
+    var blackBackground:FlxSprite;
+
     override function create() 
     {
         super.create();
@@ -59,8 +61,8 @@ class ResultsScreen extends MusicBeatSubstate
 
         rank = new ResultsScreenRank(0, 0, getRankName());
 
-        FlxG.sound.playMusic(Paths.music(getRankName() == 'e' ? 'winScreenbad' : 'winScreen'));
-        Conductor.bpm = getRankName() == 'e' ? 105 : 127;
+        //FlxG.sound.playMusic(Paths.music(getRankName() == 'e' ? 'winScreenbad' : 'winScreen'));
+        //Conductor.bpm = getRankName() == 'e' ? 100 : 127;
 
         bg = new FlxSprite();
         bg.makeGraphic(FlxG.width, FlxG.height, 0xFFCFC6F3);
@@ -85,6 +87,13 @@ class ResultsScreen extends MusicBeatSubstate
         add(bgStripe);
 
         FlxTween.tween(bgStripe, {alpha: 1}, 0.7);
+
+        blackBackground = new FlxSprite();
+        blackBackground.makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
+        blackBackground.alpha = 0;
+        add(blackBackground);
+
+        FlxTween.tween(blackBackground, {alpha: 0.5}, 0.7);
 
         boyfriend = new Character(0, 300, 'bf-WinScreen');
         boyfriend.screenCenter(Y);
@@ -136,22 +145,23 @@ class ResultsScreen extends MusicBeatSubstate
         board.antialiasing = ClientPrefs.data.antialiasing;
         add(board);
 
-        boyfriend.x = board.x - 390;
+        //boyfriend.x = board.x - 390;
+        boyfriend.x = 0 - boyfriend.width;
+        FlxTween.tween(boyfriend, {x: board.x - 400}, 1.2, {ease: FlxEase.quartOut, startDelay: 0.25});
 
-        scoreTxt = new FlxText(0, board.y + 30, 0, "SCORE: " + PlayState.instance.songScore);
+        scoreTxt = new FlxText(0, board.y + 30, 0, "SCORE: 0");
         scoreTxt.setFormat(Paths.font('FredokaOne-Regular.ttf'), 28, 0xFFB996D4, LEFT);
         scoreTxt.x = board.x + 25;
         scoreTxt.antialiasing = ClientPrefs.data.antialiasing;
         add(scoreTxt);
 
-        missesTxt = new FlxText(board.x + 30, scoreTxt.y, board.width - 80, "MISSES: " + PlayState.instance.songMisses);
+        missesTxt = new FlxText(board.x + 30, scoreTxt.y, board.width - 80, "MISSES: 0");
         missesTxt.setFormat(Paths.font('FredokaOne-Regular.ttf'), 28, 0xFFB996D4, RIGHT);
         missesTxt.x = board.x + 25;
         missesTxt.antialiasing = ClientPrefs.data.antialiasing;
         add(missesTxt);
 
-        rating = FlxMath.roundDecimal(rating, 2);
-        ratingTxt = new FlxText(0, missesTxt.y + 45, 0, "RATING: " + rating + "%");
+        ratingTxt = new FlxText(0, missesTxt.y + 45, 0, "RATING: 0%");
         ratingTxt.setFormat(Paths.font('FredokaOne-Regular.ttf'), 28, 0xFFB996D4, LEFT);
         ratingTxt.x = board.x + 25;
         ratingTxt.antialiasing = ClientPrefs.data.antialiasing;
@@ -163,25 +173,25 @@ class ResultsScreen extends MusicBeatSubstate
         statsTxt.antialiasing = ClientPrefs.data.antialiasing;
         add(statsTxt);
 
-        sicksTxt = new FlxText(0, statsTxt.y + 40, 0, "Sicks: " + sick);
+        sicksTxt = new FlxText(0, statsTxt.y + 40, 0, "Sicks: 0");
         sicksTxt.setFormat(Paths.font('FredokaOne-Regular.ttf'), 18, 0xFFB996D4, LEFT);
         sicksTxt.x = board.x + 25;
         sicksTxt.antialiasing = ClientPrefs.data.antialiasing;
         add(sicksTxt);
 
-        goodsTxt = new FlxText(0, sicksTxt.y + 25, 0, "Goods: " + good);
+        goodsTxt = new FlxText(0, sicksTxt.y + 25, 0, "Goods: 0");
         goodsTxt.setFormat(Paths.font('FredokaOne-Regular.ttf'), 18, 0xFFB996D4, LEFT);
         goodsTxt.x = board.x + 25;
         goodsTxt.antialiasing = ClientPrefs.data.antialiasing;
         add(goodsTxt);
 
-        badsTxt = new FlxText(0, goodsTxt.y + 25, 0, "Bads: " + bad);
+        badsTxt = new FlxText(0, goodsTxt.y + 25, 0, "Bads: 0");
         badsTxt.setFormat(Paths.font('FredokaOne-Regular.ttf'), 18, 0xFFB996D4, LEFT);
         badsTxt.x = board.x + 25;
         badsTxt.antialiasing = ClientPrefs.data.antialiasing;
         add(badsTxt);
 
-        shitsTxt = new FlxText(0, badsTxt.y + 25, 0, "Shits: " + shit);
+        shitsTxt = new FlxText(0, badsTxt.y + 25, 0, "Shits: 0");
         shitsTxt.setFormat(Paths.font('FredokaOne-Regular.ttf'), 18, 0xFFB996D4, LEFT);
         shitsTxt.x = board.x + 25;
         shitsTxt.antialiasing = ClientPrefs.data.antialiasing;
@@ -195,7 +205,52 @@ class ResultsScreen extends MusicBeatSubstate
         FlxTween.angle(rank, -5, 5, 4, {ease: FlxEase.quartInOut, type: PINGPONG});
 
         ratingAnimData();
-        startBfAnim();
+        bfAnimChoose();
+        //startBfAnim();
+
+        new FlxTimer().start(2, (_) -> {
+            var tweenDur:Float = 1;
+            FlxTween.num(0, PlayState.instance.songScore, tweenDur, {ease: FlxEase.linear}, function(value:Float)
+            {
+                scoreTxt.text = 'SCORE: ${Std.int(value)}';
+            });
+
+            FlxTween.num(0, PlayState.instance.songMisses, tweenDur, {ease: FlxEase.linear}, function(value:Float)
+            {
+                missesTxt.text = 'MISSES: ${Std.int(value)}';
+            });
+
+            rating = FlxMath.roundDecimal(rating, 2);
+            FlxTween.num(0, rating, tweenDur, {ease: FlxEase.linear}, function(value:Float)
+            {
+                ratingTxt.text = 'RATING: ${FlxMath.roundDecimal(value, 2)}%';
+            });
+
+            FlxTween.num(0, sick, tweenDur, {ease: FlxEase.linear}, function(value:Float)
+            {
+                sicksTxt.text = 'Sicks: ${Std.int(value)}';
+            });
+            
+            FlxTween.num(0, good, tweenDur, {ease: FlxEase.linear}, function(value:Float)
+            {
+                goodsTxt.text = 'Goods: ${Std.int(value)}';
+            });
+            
+            FlxTween.num(0, bad, tweenDur, {ease: FlxEase.linear}, function(value:Float)
+            {
+                badsTxt.text = 'Bads: ${Std.int(value)}';
+            });
+            
+            FlxTween.num(0, shit, tweenDur, {ease: FlxEase.linear}, function(value:Float)
+            {
+                shitsTxt.text = 'Shits: ${Std.int(value)}';
+            });
+
+            new FlxTimer().start(1, (_) -> {
+                FlxG.sound.playMusic(Paths.music(getRankName() == 'e' ? 'winScreenbad' : 'winScreen'));
+                Conductor.bpm = getRankName() == 'e' ? 100 : 127;
+            });
+        });
     }
 
     function getRankName():String
@@ -206,6 +261,12 @@ class ResultsScreen extends MusicBeatSubstate
         if (rating >= 55) return 'c';
         if (rating >= 40) return 'd';
         return 'e';
+    }
+
+    function bfAnimChoose()
+    {
+        boyfriend.alpha = 1;
+        boyfriend.playAnim('choose');
     }
 
     function startBfAnim()
@@ -235,6 +296,11 @@ class ResultsScreen extends MusicBeatSubstate
     {
         super.update(elapsed);
 
+		if (FlxG.sound.music != null)
+			Conductor.songPosition = FlxG.sound.music.time;
+
+		FlxG.watch.addQuick("beatShit", curBeat);
+
         if(controls.BACK)
         {
             if(PlayState.isStoryMode)
@@ -250,6 +316,42 @@ class ResultsScreen extends MusicBeatSubstate
                 MusicBeatState.switchState(new FreeplayState());
             }
         }
+    }
+
+	var lastBeatHit:Int = -1;
+
+    override function beatHit()
+    {
+		if(lastBeatHit >= curBeat) {
+			//trace('BEAT HIT: ' + curBeat + ', LAST HIT: ' + lastBeatHit);
+			return;
+		}
+
+        trace('BEAT HIT: ' + curBeat);
+
+        switch(curBeat)
+        {
+            case 0 | 1 | 2:
+                trace('pollita');
+                PlayState.instance.camOther.zoom = curBeat == 2 ? 1.05 : 1.03;
+
+                FlxTween.cancelTweensOf(PlayState.instance.camOther.zoom);
+                FlxTween.tween(PlayState.instance.camOther, {zoom: 1}, Conductor.crochet / 1000, {ease: FlxEase.quartOut});
+
+                if(curBeat == 2)
+                {
+                    startBfAnim();
+
+                    boyfriend.scale.set(1.05, 1.05);
+                    FlxTween.tween(boyfriend, {"scale.x": 1, "scale.y": 1}, 1, {ease: FlxEase.quartOut});
+                    FlxTween.angle(boyfriend, -3, 3, 3, {ease: FlxEase.cubeInOut, type: PINGPONG});
+
+                    FlxTween.tween(blackBackground, {alpha: getRankName() == 'e' ? 0.1 : 0}, 0.5);
+                }
+        }
+
+        super.beatHit();
+		lastBeatHit = curBeat;
     }
 }
 
