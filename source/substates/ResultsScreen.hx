@@ -50,6 +50,7 @@ class ResultsScreen extends MusicBeatSubstate
 
     var blackBackground:FlxSprite;
     var whiteBackground:FlxSprite;
+    var fullBlackBackground:FlxSprite;
 
     override function create() 
     {
@@ -210,6 +211,11 @@ class ResultsScreen extends MusicBeatSubstate
 
         FlxTween.angle(rank, -5, 5, 4, {ease: FlxEase.quartInOut, type: PINGPONG});
 
+        fullBlackBackground = new FlxSprite();
+        fullBlackBackground.makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
+        fullBlackBackground.alpha = 0;
+        add(fullBlackBackground);
+
         ratingAnimData();
         bfAnimChoose();
         //startBfAnim();
@@ -319,18 +325,32 @@ class ResultsScreen extends MusicBeatSubstate
 
         if(controls.BACK)
         {
-            if(PlayState.isStoryMode)
+            FlxTween.tween(fullBlackBackground, {alpha: 1}, 0.6);
+
+            FlxTween.num(1, 4, 0.1, {ease: FlxEase.linear, onComplete: (_) -> {
+                FlxTween.num(4, 0.1, 0.5, {ease: FlxEase.linear}, function(value:Float) {FlxG.sound.music.pitch = value;});    
+            }}, function(value:Float) {FlxG.sound.music.pitch = value;});
+
+            FlxTween.num(1, 0, 0.6, {ease: FlxEase.linear, onComplete: (_) -> {
+                new FlxTimer().start(0.6,(_) -> {
+                    if(PlayState.isStoryMode)
+                    {
+		            	FlxTransitionableState.skipNextTransIn = true;
+		            	FlxTransitionableState.skipNextTransOut = true;
+                        MusicBeatState.switchState(new StoryMenuState());
+                    }
+                    else
+                    {
+		            	FlxTransitionableState.skipNextTransIn = true;
+		            	FlxTransitionableState.skipNextTransOut = true;
+                        MusicBeatState.switchState(new FreeplayState());
+                    }
+                });
+            }}, function(value:Float)
             {
-		    	FlxTransitionableState.skipNextTransIn = true;
-		    	FlxTransitionableState.skipNextTransOut = true;
-                MusicBeatState.switchState(new StoryMenuState());
-            }
-            else
-            {
-		    	FlxTransitionableState.skipNextTransIn = true;
-		    	FlxTransitionableState.skipNextTransOut = true;
-                MusicBeatState.switchState(new FreeplayState());
-            }
+                FlxG.sound.music.volume = value;
+            });
+            
         }
     }
 
