@@ -247,8 +247,18 @@ class ResultsScreen extends MusicBeatSubstate
             });
 
             new FlxTimer().start(1, (_) -> {
+                startBeating = true;
                 FlxG.sound.playMusic(Paths.music(getRankName() == 'e' ? 'winScreenbad' : 'winScreen'));
                 Conductor.bpm = getRankName() == 'e' ? 100 : 127;
+
+                if(getRankName() == 'e')
+                {
+                    trace('pollita inicial');
+                    FlxTween.cancelTweensOf(PlayState.instance.camOther.zoom);
+
+                    PlayState.instance.camOther.zoom = 1.03;
+                    FlxTween.tween(PlayState.instance.camOther, {zoom: 1}, Conductor.crochet / 1000, {ease: FlxEase.quartOut});
+                }
             });
         });
     }
@@ -319,26 +329,26 @@ class ResultsScreen extends MusicBeatSubstate
     }
 
 	var lastBeatHit:Int = -1;
+    var sickBeats:Int = 1;
+    var startBeating:Bool = false;
 
     override function beatHit()
     {
-		if(lastBeatHit >= curBeat) {
-			//trace('BEAT HIT: ' + curBeat + ', LAST HIT: ' + lastBeatHit);
-			return;
-		}
-
         trace('BEAT HIT: ' + curBeat);
 
-        switch(curBeat)
+        if(startBeating) sickBeats++;
+        trace('SIIIICK BEAT HIT: ' + sickBeats);
+        switch(sickBeats)
         {
-            case 0 | 1 | 2:
+            case 2 | 3:
                 trace('pollita');
-                PlayState.instance.camOther.zoom = curBeat == 2 ? 1.05 : 1.03;
 
                 FlxTween.cancelTweensOf(PlayState.instance.camOther.zoom);
+
+                PlayState.instance.camOther.zoom = 1.03;
                 FlxTween.tween(PlayState.instance.camOther, {zoom: 1}, Conductor.crochet / 1000, {ease: FlxEase.quartOut});
 
-                if(curBeat == 2)
+                if(sickBeats == 3)
                 {
                     startBfAnim();
 
@@ -346,12 +356,11 @@ class ResultsScreen extends MusicBeatSubstate
                     FlxTween.tween(boyfriend, {"scale.x": 1, "scale.y": 1}, 1, {ease: FlxEase.quartOut});
                     FlxTween.angle(boyfriend, -3, 3, 3, {ease: FlxEase.cubeInOut, type: PINGPONG});
 
-                    FlxTween.tween(blackBackground, {alpha: getRankName() == 'e' ? 0.1 : 0}, 0.5);
+                    FlxTween.tween(blackBackground, {alpha: getRankName() == 'e' ? 0.25 : 0}, 0.5);
                 }
         }
 
         super.beatHit();
-		lastBeatHit = curBeat;
     }
 }
 
