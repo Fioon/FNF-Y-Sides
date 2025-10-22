@@ -94,11 +94,12 @@ class StoryMenuState extends MusicBeatState
 
 		FlxTween.tween(weekBackground, {alpha: 1}, 1, {ease: FlxEase.quartOut});
 
-		icons = new FlxBackdrop(Paths.image('mainmenu/icons'), XY);
-		icons.velocity.set(-25, 0);
-		icons.alpha = 0.3;
+		icons = new FlxBackdrop(Paths.image('storymenu/strangethingidk'), XY);
+		icons.velocity.set(-15, 10);
+		icons.alpha = 0.25;
+		icons.blend = ADD;
 		icons.antialiasing = ClientPrefs.data.antialiasing;
-		//add(icons);
+		add(icons);
 
 		weekCharacter = new FlxSprite();
 		weekCharacter.alpha = 0;
@@ -286,6 +287,7 @@ class StoryMenuState extends MusicBeatState
 				FlxTween.cancelTweensOf(weekCharacter);
 				FlxTween.cancelTweensOf(tv);
 				FlxTween.cancelTweensOf(escapeButton);
+				FlxTween.cancelTweensOf(icons);
 				FlxTween.cancelTweensOf(leftArrow);
 				FlxTween.cancelTweensOf(sprDifficulty);
 				FlxTween.cancelTweensOf(rightArrow);
@@ -295,6 +297,7 @@ class StoryMenuState extends MusicBeatState
 				FlxTween.tween(weekBackground, {alpha: 0}, 1, {ease: FlxEase.quartOut});
 				FlxTween.tween(weekCharacter, {alpha: 0}, 1, {ease: FlxEase.quartOut});
 				FlxTween.tween(tv, {y: FlxG.height}, 1, {ease: FlxEase.quartOut});
+				FlxTween.tween(icons, {alpha: 0}, 1, {ease: FlxEase.quartOut});
 				FlxTween.tween(escapeButton, {y: -escapeButton.height}, 1, {ease: FlxEase.quartOut});
 				FlxTween.tween(leftArrow, {y: leftArrow.y + 10, alpha: 0}, 0.5, {ease: FlxEase.quartOut, startDelay: 0.1});
 				FlxTween.tween(sprDifficulty, {y: sprDifficulty.y + 10, alpha: 0}, 0.5, {ease: FlxEase.quartOut, startDelay: 0.2});
