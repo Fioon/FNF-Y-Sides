@@ -39,7 +39,7 @@ class FreeplayState extends MusicBeatState
 	private var grpSongs:FlxTypedGroup<Alphabet>;
 	private var curPlaying:Bool = false;
 
-	private var iconArray:Array<HealthIcon> = [];
+	private var iconArray:Array<FlxSprite> = [];
 	private var eachCenter:Array<Float> = [];
 
 	var bg:FlxSprite;
@@ -160,8 +160,9 @@ class FreeplayState extends MusicBeatState
 			}
 
 			Mods.currentModDirectory = songs[i].folder;
-			var icon:HealthIcon = new HealthIcon(songs[i].songCharacter);
-			icon.sprTracker = songText;
+			var icon:FlxSprite = new FlxSprite();
+			icon.loadGraphic(Paths.image('freePlay/icons/icon-${songs[i].songCharacter}'));
+			//icon.sprTracker = songText;
 
 			// too laggy with a lot of songs, so i had to recode the logic for it
 			songText.visible = songText.active = songText.isMenuItem = false;
@@ -639,7 +640,7 @@ class FreeplayState extends MusicBeatState
 
 		for (num => item in grpSongs.members)
 		{
-			var icon:HealthIcon = iconArray[num];
+			var icon:FlxSprite = iconArray[num];
 
 			if(updateAlpha) {
 				item.alpha = 0.6;
@@ -733,7 +734,7 @@ class FreeplayState extends MusicBeatState
 
 			item.y = yOffset + item.startPosition.y;
 
-			var icon:HealthIcon = iconArray[i];
+			var icon:FlxSprite = iconArray[i];
 			icon.visible = icon.active = true;
 			_lastVisibles.push(i);
 		}
