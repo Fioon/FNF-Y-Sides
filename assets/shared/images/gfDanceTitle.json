@@ -5,7 +5,7 @@
 	"starty": 576,
 	"gfx": 650,
 	"gfy": 150,
-	"backgroundSprite": "bg",
+	"backgroundSprite": "",
 	"bpm": 180,
 	
 	"animation": "gfDance",
