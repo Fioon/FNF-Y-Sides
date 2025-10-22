@@ -86,6 +86,9 @@
 
 ## OTHER
 
+- [ ] Week 2 Award
+- [ ] Week 3 Award
+
 - [x] Background (Week 2)
 - [x] Background (Week 3)
 
