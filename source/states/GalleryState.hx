@@ -585,8 +585,6 @@ class GalleryStateMusic extends MusicBeatState
     var barLeft:FlxSprite;
     var barRight:FlxSprite;
     var lines:FlxBackdrop = new FlxBackdrop(Paths.image('gallery/lines'), #if (flixel <= "5.0.0") 0.2, 0.2, true, true #else XY #end);
-	var diskIconsLeft:FlxBackdrop = new FlxBackdrop(Paths.image('gallery/music/disk'), #if (flixel <= "5.0.0") 0.2, 0.2, true, true #else Y, 0, 12 #end);
-	var diskIconsRight:FlxBackdrop = new FlxBackdrop(Paths.image('gallery/music/disk'), #if (flixel <= "5.0.0") 0.2, 0.2, true, true #else Y, 0, 12 #end);
 
     var panel:FlxSprite;
     var bf:FlxSprite;
@@ -607,6 +605,8 @@ class GalleryStateMusic extends MusicBeatState
     public function new()
     {
         super();
+
+        preloadMusic();
 
 		wiggle = new WiggleEffect(2, 4, 0.002, WiggleEffectType.DREAMY);
 		wiggleBg = new WiggleEffect(2, 4, 0.002, WiggleEffectType.DREAMY);
@@ -637,18 +637,6 @@ class GalleryStateMusic extends MusicBeatState
         barRight.flipX = true;
         barRight.x = FlxG.width - barRight.width;
         add(barRight);
-
-        diskIconsLeft.velocity.set(0, -50);
-        diskIconsLeft.antialiasing = ClientPrefs.data.antialiasing;
-        diskIconsLeft.x = barLeft.x + (barLeft.width / 2) - (diskIconsLeft.width / 2) - (17 / 2);
-		add(diskIconsLeft);
-
-        diskIconsRight.flipX = true;
-        diskIconsRight.velocity.set(0, 50);
-        diskIconsRight.y = FlxG.height - diskIconsRight.height;
-        diskIconsRight.antialiasing = ClientPrefs.data.antialiasing;
-        diskIconsRight.x = barRight.x + (barRight.width / 2) - (diskIconsRight.width / 2) + (17 / 2);
-        add(diskIconsRight);
 
         panel = new FlxSprite(775, 0);
         panel.loadGraphic(Paths.image('gallery/music/panel'));
@@ -692,7 +680,6 @@ class GalleryStateMusic extends MusicBeatState
             musicSongsGrp.add(spr);
         }
 
-        preloadMusic();
         changeSelect(0, true);
     }
 
@@ -718,12 +705,6 @@ class GalleryStateMusic extends MusicBeatState
 
         barRight.x = FlxG.width;
         FlxTween.tween(barRight, {x: FlxG.width - barRight.width}, 0.3, {ease: FlxEase.quartOut});
-
-        diskIconsLeft.x = -barLeft.width;
-        FlxTween.tween(diskIconsLeft, {x: barLeft.x + (barLeft.width / 2) - (diskIconsLeft.width / 2) - (17 / 2)}, 0.3, {ease: FlxEase.quartOut});
-
-        diskIconsRight.x = FlxG.width;
-        FlxTween.tween(diskIconsRight, {x: barRight.x + (barRight.width / 2) - (diskIconsRight.width / 2) + (17 / 2)}, 0.3, {ease: FlxEase.quartOut});
 
         panel.y += 10;
         panel.alpha = 0;
@@ -797,8 +778,6 @@ class GalleryStateMusic extends MusicBeatState
 
         FlxTween.tween(barLeft, {x: -barLeft.width}, tweenDuration, {ease: FlxEase.quartOut});
         FlxTween.tween(barRight, {x: FlxG.width}, tweenDuration, {ease: FlxEase.quartOut});
-        FlxTween.tween(diskIconsLeft, {x: -diskIconsLeft.width}, tweenDuration, {ease: FlxEase.quartOut});
-        FlxTween.tween(diskIconsRight, {x: FlxG.width}, tweenDuration, {ease: FlxEase.quartOut});
         FlxTween.tween(panel, {y: panel.y - 10, alpha: 0}, tweenDuration, {ease: FlxEase.quartOut});
         FlxTween.tween(bf, {y: bf.y - 10, alpha: 0}, tweenDuration, {ease: FlxEase.quartOut});
         FlxTween.tween(arrowUp, {alpha: 0}, tweenDuration, {ease: FlxEase.quartOut});
