@@ -273,6 +273,14 @@ class LoadingState extends MusicBeatState
 		{
 			dontUpdate = true;
 			onLoad();
+
+			if (stopMusic && FlxG.sound.music != null)
+				FlxG.sound.music.stop();
+		
+			FlxG.camera.visible = false;
+			MusicBeatState.switchState(target);
+			transitioning = true;
+			finishedLoading = true;
 		}
 	}
 
@@ -310,7 +318,7 @@ class LoadingState extends MusicBeatState
 			//bar.scale.x = barWidth * curPercent;
 			//bar.updateHitbox();
 
-			rayLoading.x = tvLoading.x + 280 + (480 * curPercent);
+			rayLoading.x = tvLoading.x + 280 + (530 * curPercent);
 		}
 		
 		#if HSCRIPT_ALLOWED
