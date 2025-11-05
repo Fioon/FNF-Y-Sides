@@ -302,7 +302,7 @@ class LoadingState extends MusicBeatState
 			intendedPercent = loaded / loadMax;
 		}
 
-		if (curPercent != intendedPercent && !canStartSong)
+		if (curPercent != intendedPercent)
 		{
 			if (Math.abs(curPercent - intendedPercent) < 0.001) curPercent = intendedPercent;
 			else curPercent = FlxMath.lerp(intendedPercent, curPercent, Math.exp(-elapsed * 15));
@@ -424,8 +424,6 @@ class LoadingState extends MusicBeatState
 	var canStartSong:Bool = false;
 	function onLoad()
 	{
-		canStartSong = true;
-
 		_loaded();
 		pressEnter.alpha = 1;
 		txtLoading.animation.play('ready', true);
@@ -434,6 +432,8 @@ class LoadingState extends MusicBeatState
 		tvLoading.animation.play('loaded', true);
 		rayLoading.animation.play('loaded', true);
 		rayLoading.x = tvLoading.x + 280 + 480; // set the ray at the end
+
+		canStartSong = true;
 	}
 
 	static function _loaded()
