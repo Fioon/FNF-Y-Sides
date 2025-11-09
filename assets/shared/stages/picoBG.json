@@ -23,10 +23,6 @@
 		867,
 		140
 	],
-	"camera_girlfriend": [
-		0,
-		0
-	],
 	"defaultZoom": 0.55,
 	"objects": [
 		{
@@ -173,6 +169,10 @@
 			"alpha": 0.95,
 			"type": "sprite"
 		}
+	],
+	"camera_girlfriend": [
+		0,
+		0
 	],
 	"camera_speed": 1,
 	"directory": "week1",

@@ -49,6 +49,7 @@
 	"flip_x": false,
 	"healthbar_colors": [254, 0, 103],
 	"icon_offset": [0, -25],
+	"flip_health_icon": true,
 	"camera_position": [0, 0],
 	"sing_duration": 4,
 	"scale": 1.1,

@@ -632,6 +632,7 @@ class PlayState extends MusicBeatState
 		iconP2.flipX = iconP2.isAnimated;
 		iconP2.x = healthBar.x - iconOffset - 105 + dad.iconOffset[0];
 		iconP2.y = healthBar.y + (healthBar.height / 2) - (iconP2.height / 2) + dad.iconOffset[1];
+		iconP2.flipX = dad.flipHealthIcon;
 		iconP2.visible = !ClientPrefs.data.hideHud;
 		iconP2.alpha = ClientPrefs.data.healthBarAlpha;
 		uiGroup.add(iconP2);
@@ -2268,6 +2269,7 @@ class PlayState extends MusicBeatState
 	}
 
 	var iconOffset:Int = 26;
+	var flipHealthIcon:Bool = false;
 	public dynamic function updateIconsPosition()
 	{
 		//iconP1.x = healthBar.barCenter + (150 * iconP1.scale.x - 150) / 2 - iconOffset;
