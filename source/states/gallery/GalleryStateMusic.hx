@@ -188,6 +188,8 @@ class GalleryStateMusic extends MusicBeatState
                 arrowUp.scale.set(0.9, 0.85);
             }
 
+            if(FlxG.mouse.wheel != 0) changeSelect(-FlxG.mouse.wheel);
+
             if(controls.BACK)
             {
                 goBack();
