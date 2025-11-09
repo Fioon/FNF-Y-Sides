@@ -319,6 +319,8 @@ class LoadingState extends MusicBeatState
 			//bar.updateHitbox();
 
 			rayLoading.x = tvLoading.x + 280 + (530 * curPercent);
+			if(canStartSong) rayLoading.x = 884;
+			trace('updating ray pos to ${rayLoading.x}');
 		}
 		
 		#if HSCRIPT_ALLOWED
