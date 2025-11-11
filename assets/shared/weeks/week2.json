@@ -1,16 +1,15 @@
 {
 	"songs": [
-		["Spookeez", "dad", [97, 181, 180]],
-		["South", "dad", [97, 181, 180]]
+		["Spookeez", "frank", [233, 234, 255]],
+		["South", "frank", [233, 234, 255]]
 	],
 
 	"weekCharacters": [
-		"dad",
+		"frank",
 		"bf",
 		"gf"
 	],
 	"weekBackground": "stage",
-	"difficulties": "Hard",
 
 	"storyName": "Daddy Dearest",
 	"weekBefore": "tutorial",

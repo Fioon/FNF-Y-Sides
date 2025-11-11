@@ -34,7 +34,7 @@ import states.editors.CharacterEditorState;
 
 import substates.PauseSubState;
 import substates.GameOverSubstate;
-import substates.WinScreen;
+import substates.ResultsScreen;
 
 #if !flash
 import openfl.filters.ShaderFilter;
@@ -241,6 +241,12 @@ class PlayState extends MusicBeatState
 	public static var campaignScore:Int = 0;
 	public static var campaignMisses:Int = 0;
 	public static var campaignRating:Int = 0;
+
+	public static var campaignSicks:Int = 0;
+	public static var campaignGoods:Int = 0;
+	public static var campaignBads:Int = 0;
+	public static var campaignShits:Int = 0;
+
 	public static var seenCutscene:Bool = false;
 	public static var deathCounter:Int = 0;
 
@@ -616,16 +622,17 @@ class PlayState extends MusicBeatState
 		uiGroup.add(fcSprite);
 
 		iconP1 = new HealthIcon(boyfriend.healthIcon, true);
-		iconP1.x = healthBar.x + healthBar.width - 20;
-		iconP1.y = healthBar.y + (healthBar.height / 2) - (iconP1.height / 2);
+		iconP1.x = healthBar.x + healthBar.width - 20 + boyfriend.iconOffset[0];
+		iconP1.y = healthBar.y + (healthBar.height / 2) - (iconP1.height / 2) + boyfriend.iconOffset[1];
 		iconP1.visible = !ClientPrefs.data.hideHud;
 		iconP1.alpha = ClientPrefs.data.healthBarAlpha;
 		uiGroup.add(iconP1);
 
 		iconP2 = new HealthIcon(dad.healthIcon, false);
 		iconP2.flipX = iconP2.isAnimated;
-		iconP2.x = healthBar.x - iconOffset - 105;
-		iconP2.y = healthBar.y + (healthBar.height / 2) - (iconP2.height / 2);
+		iconP2.x = healthBar.x - iconOffset - 105 + dad.iconOffset[0];
+		iconP2.y = healthBar.y + (healthBar.height / 2) - (iconP2.height / 2) + dad.iconOffset[1];
+		iconP2.flipX = dad.flipHealthIcon;
 		iconP2.visible = !ClientPrefs.data.hideHud;
 		iconP2.alpha = ClientPrefs.data.healthBarAlpha;
 		uiGroup.add(iconP2);
@@ -634,8 +641,8 @@ class PlayState extends MusicBeatState
 		{
 			iconP3 = new HealthIcon(player3.healthIcon, false);
 			iconP3.flipX = iconP3.isAnimated;
-			iconP3.x = healthBar.x - iconOffset - 105;
-			iconP3.y = healthBar.y + (healthBar.height / 2) - (iconP3.height / 2);
+			iconP3.x = healthBar.x - iconOffset - 105 + player3.iconOffset[0];
+			iconP3.y = healthBar.y + (healthBar.height / 2) - (iconP3.height / 2) + player3.iconOffset[1];
 			iconP3.visible = !ClientPrefs.data.hideHud;
 			iconP3.alpha = ClientPrefs.data.healthBarAlpha;
 			uiGroup.add(iconP3);
@@ -2262,6 +2269,7 @@ class PlayState extends MusicBeatState
 	}
 
 	var iconOffset:Int = 26;
+	var flipHealthIcon:Bool = false;
 	public dynamic function updateIconsPosition()
 	{
 		//iconP1.x = healthBar.barCenter + (150 * iconP1.scale.x - 150) / 2 - iconOffset;
@@ -2274,7 +2282,7 @@ class PlayState extends MusicBeatState
 		else
 		    iconP1.angle = 0;
 
-		if (losingIconP2)
+		if (losingIconP2 && curSong != 'Tutorial') // why would gf shake cuz you're winning lol??
 			if (curStep % 4 == 0) iconP2.angle = FlxG.random.int(-3,3);
 		else
 		    iconP2.angle = 0;
@@ -2988,12 +2996,18 @@ class PlayState extends MusicBeatState
 				campaignMisses += songMisses;
 				campaignRating += Std.int(ratingPercent * 100);
 				totalSongsPlayed++;
+				trace('SUMA $totalSongsPlayed');
+
+				campaignSicks += ratingsData[0].hits;
+				campaignGoods += ratingsData[1].hits;
+				campaignBads += ratingsData[2].hits;
+				campaignShits += ratingsData[3].hits;
 
 				storyPlaylist.remove(storyPlaylist[0]);
 
 				if (storyPlaylist.length <= 0)
 				{
-					winScreen();
+					openResultsScreen();
 
 					/*
 					Mods.loadTopMod();
@@ -3040,7 +3054,7 @@ class PlayState extends MusicBeatState
 			}
 			else
 			{
-				winScreen();
+				openResultsScreen();
 
 				trace('WENT BACK TO FREEPLAY??');
 				Mods.loadTopMod();
@@ -3058,10 +3072,10 @@ class PlayState extends MusicBeatState
 		return true;
 	}
 
-	public function winScreen():Void
+	public function openResultsScreen():Void
 	{
 		persistentUpdate = false;
-		persistentDraw = true;
+		persistentDraw = false;
 
 		var shit:FlxSprite = new FlxSprite();
 		shit.makeGraphic(1280, 720, 0xFF000000);
@@ -3071,9 +3085,12 @@ class PlayState extends MusicBeatState
 
 		FlxTween.tween(shit, {alpha: 1}, 0.4);
 			
-		var winScreen = new WinScreen();
-		winScreen.cameras = [camOther];
-		openSubState(winScreen);
+		var resultsScreen = new ResultsScreen();
+		resultsScreen.cameras = [camOther];
+		openSubState(resultsScreen);
+
+		FlxG.sound.music.pause();
+		FlxG.sound.music.time = 0;
 
 		camHUD.alpha = 0;
 		trace('you win omfg');
@@ -3090,7 +3107,7 @@ class PlayState extends MusicBeatState
 		eventNotes = [];
 	}
 
-	public var totalSongsPlayed:Int = 0;
+	public static var totalSongsPlayed:Int = 0;
 	public var totalPlayed:Int = 0;
 	public var totalNotesHit:Float = 0.0;
 

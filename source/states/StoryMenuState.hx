@@ -94,11 +94,12 @@ class StoryMenuState extends MusicBeatState
 
 		FlxTween.tween(weekBackground, {alpha: 1}, 1, {ease: FlxEase.quartOut});
 
-		icons = new FlxBackdrop(Paths.image('mainmenu/icons'), XY);
-		icons.velocity.set(-25, 0);
-		icons.alpha = 0.3;
+		icons = new FlxBackdrop(Paths.image('storymenu/strangethingidk'), XY);
+		icons.velocity.set(-15, 10);
+		icons.alpha = 0.25;
+		icons.blend = ADD;
 		icons.antialiasing = ClientPrefs.data.antialiasing;
-		//add(icons);
+		add(icons);
 
 		weekCharacter = new FlxSprite();
 		weekCharacter.alpha = 0;
@@ -106,6 +107,7 @@ class StoryMenuState extends MusicBeatState
 		add(weekCharacter);
 
 		FlxTween.tween(weekCharacter, {alpha: 1}, 1, {ease: FlxEase.quartOut});
+		FlxTween.tween(weekCharacter, {alpha: 1, y: weekCharacter.y - 10}, 0.1, {ease: FlxEase.quartOut});
 
 		tv = new FlxSprite();
 		tv.loadGraphic(Paths.image('storymenu/TV'));
@@ -286,6 +288,7 @@ class StoryMenuState extends MusicBeatState
 				FlxTween.cancelTweensOf(weekCharacter);
 				FlxTween.cancelTweensOf(tv);
 				FlxTween.cancelTweensOf(escapeButton);
+				FlxTween.cancelTweensOf(icons);
 				FlxTween.cancelTweensOf(leftArrow);
 				FlxTween.cancelTweensOf(sprDifficulty);
 				FlxTween.cancelTweensOf(rightArrow);
@@ -295,6 +298,7 @@ class StoryMenuState extends MusicBeatState
 				FlxTween.tween(weekBackground, {alpha: 0}, 1, {ease: FlxEase.quartOut});
 				FlxTween.tween(weekCharacter, {alpha: 0}, 1, {ease: FlxEase.quartOut});
 				FlxTween.tween(tv, {y: FlxG.height}, 1, {ease: FlxEase.quartOut});
+				FlxTween.tween(icons, {alpha: 0}, 1, {ease: FlxEase.quartOut});
 				FlxTween.tween(escapeButton, {y: -escapeButton.height}, 1, {ease: FlxEase.quartOut});
 				FlxTween.tween(leftArrow, {y: leftArrow.y + 10, alpha: 0}, 0.5, {ease: FlxEase.quartOut, startDelay: 0.1});
 				FlxTween.tween(sprDifficulty, {y: sprDifficulty.y + 10, alpha: 0}, 0.5, {ease: FlxEase.quartOut, startDelay: 0.2});
@@ -465,8 +469,16 @@ class StoryMenuState extends MusicBeatState
 				PlayState.storyDifficulty = curDifficulty;
 	
 				Song.loadFromJson(PlayState.storyPlaylist[0].toLowerCase() + diffic, PlayState.storyPlaylist[0].toLowerCase());
+
+				PlayState.totalSongsPlayed = 0;
 				PlayState.campaignScore = 0;
 				PlayState.campaignMisses = 0;
+				PlayState.campaignRating = 0;
+
+				PlayState.campaignSicks = 0;
+				PlayState.campaignGoods = 0;
+				PlayState.campaignBads = 0;
+				PlayState.campaignShits = 0;
 			}
 			catch(e:Dynamic)
 			{
@@ -579,6 +591,9 @@ class StoryMenuState extends MusicBeatState
 
 		FlxTween.cancelTweensOf(weekCharacter);
 		FlxTween.tween(weekCharacter, {alpha: 1, y: weekCharacter.y - 10}, 0.1, {ease: FlxEase.quartOut});
+		
+		weekCharacter.angle = 3;
+		FlxTween.tween(weekCharacter, {angle: -3}, 6, {ease: FlxEase.quartInOut, type: PINGPONG});
 
 		if(Difficulty.list.contains(Difficulty.getDefault()))
 			curDifficulty = Math.round(Math.max(0, Difficulty.defaultList.indexOf(Difficulty.getDefault())));

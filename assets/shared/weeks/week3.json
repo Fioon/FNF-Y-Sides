@@ -1,16 +1,16 @@
 {
 	"songs": [
-		["Pico", "dad", [97, 181, 180]],
-		["Philly Nice", "dad", [97, 181, 180]]
+		["Pico", "pico", [254, 0, 103]],
+		["Philly Nice", "pico", [254, 0, 103]],
+		["Blammed", "pico", [254, 0, 103]]
 	],
 
 	"weekCharacters": [
-		"dad",
+		"pico",
 		"bf",
 		"gf"
 	],
 	"weekBackground": "stage",
-	"difficulties": "Hard",
 
 	"storyName": "Pico!",
 	"weekBefore": "week2",

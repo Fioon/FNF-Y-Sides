@@ -39,7 +39,7 @@ class FreeplayState extends MusicBeatState
 	private var grpSongs:FlxTypedGroup<Alphabet>;
 	private var curPlaying:Bool = false;
 
-	private var iconArray:Array<HealthIcon> = [];
+	private var iconArray:Array<FlxSprite> = [];
 	private var eachCenter:Array<Float> = [];
 
 	var bg:FlxSprite;
@@ -56,6 +56,9 @@ class FreeplayState extends MusicBeatState
 	var scoreThing:FlxSprite;
 
 	var player:MusicPlayer;
+
+	var diffArrowUp:FlxSprite;
+	var diffArrowDown:FlxSprite;
 
 	override function create()
 	{
@@ -160,8 +163,9 @@ class FreeplayState extends MusicBeatState
 			}
 
 			Mods.currentModDirectory = songs[i].folder;
-			var icon:HealthIcon = new HealthIcon(songs[i].songCharacter);
-			icon.sprTracker = songText;
+			var icon:FlxSprite = new FlxSprite();
+			icon.loadGraphic(Paths.image('freePlay/icons/icon-${songs[i].songCharacter}'));
+			//icon.sprTracker = songText;
 
 			// too laggy with a lot of songs, so i had to recode the logic for it
 			songText.visible = songText.active = songText.isMenuItem = false;
@@ -198,11 +202,26 @@ class FreeplayState extends MusicBeatState
 		scoreText.antialiasing = ClientPrefs.data.antialiasing;
 
 		diffText = new FlxText(scoreText.x, scoreText.y + scoreText.height + 40, scoreThing.width - 20, "", 78);
-		diffText.setFormat(Paths.font("FredokaOne-Regular.ttf"), 78, FlxColor.WHITE, CENTER);
+		diffText.setFormat(Paths.font("FredokaOne-Regular.ttf"), 70, FlxColor.WHITE, CENTER);
 		diffText.antialiasing = ClientPrefs.data.antialiasing;
 		add(diffText);
 
 		add(scoreText);
+
+		diffArrowUp = new FlxSprite();
+		diffArrowUp.loadGraphic(Paths.image('freePlay/freeplay_diff_arrow'));
+		diffArrowUp.setPosition(diffText.x + (diffText.width / 2) - (diffArrowUp.width / 2), scoreThing.y + 160);
+		diffArrowUp.scale.set(0.9, 0.9);
+		diffArrowUp.antialiasing = ClientPrefs.data.antialiasing;
+		add(diffArrowUp);
+
+		diffArrowDown = new FlxSprite();
+		diffArrowDown.loadGraphic(Paths.image('freePlay/freeplay_diff_arrow'));
+		diffArrowDown.setPosition(diffText.x + (diffText.width / 2) - (diffArrowDown.width / 2), diffArrowUp.y + 100);
+		diffArrowDown.scale.set(0.9, 0.9);
+		diffArrowDown.antialiasing = ClientPrefs.data.antialiasing;
+		diffArrowDown.flipY = true;
+		add(diffArrowDown);
 
 		cloud = new FlxSprite(750, 720);
 		cloud.loadGraphic(Paths.image('freePlay/cloud'));
@@ -223,6 +242,8 @@ class FreeplayState extends MusicBeatState
 		add(bf);
 
 		bopTweenAnim(scoreThing, 350, 0);
+		bopTweenAnim(diffArrowUp, 350 + 100, 0);
+		bopTweenAnim(diffArrowDown, 350 + 100 + 130, 0);
 		bopTweenAnim(bf, 475, 0.3);
 		bopTweenAnim(cloud, 300, 0.45);
 
@@ -361,14 +382,14 @@ class FreeplayState extends MusicBeatState
 				}
 			}
 
-			if (controls.UI_LEFT_P)
-			{
-				changeDiff(-1);
-				_updateSongLastDifficulty();
-			}
-			else if (controls.UI_RIGHT_P)
+			if (controls.UI_UP_P)
 			{
 				changeDiff(1);
+				_updateSongLastDifficulty();
+			}
+			else if (controls.UI_DOWN_P)
+			{
+				changeDiff(-1);
 				_updateSongLastDifficulty();
 			}
 		}
@@ -406,6 +427,8 @@ class FreeplayState extends MusicBeatState
 				FlxTween.cancelTweensOf(icons);
 				FlxTween.cancelTweensOf(bg);
 				FlxTween.cancelTweensOf(scoreThing);
+				FlxTween.cancelTweensOf(diffArrowUp);
+				FlxTween.cancelTweensOf(diffArrowDown);
 				FlxTween.cancelTweensOf(bf);
 				FlxTween.cancelTweensOf(cloud);
 				FlxTween.cancelTweensOf(currentIcon);
@@ -415,10 +438,14 @@ class FreeplayState extends MusicBeatState
 				FlxTween.color(bg, 0.4, bg.color, 0xFFFFFFFF);
 
 				bopTweenAnim(scoreThing, 820, 0);
+				bopTweenAnim(diffArrowUp, 820, 0);
+				bopTweenAnim(diffArrowDown, 820, 0);
 				bopTweenAnim(bf, 820, 0);
 				bopTweenAnim(cloud, 820, 0);
 
 				FlxTween.tween(scoreThing, {alpha: 0}, 0.2);
+				FlxTween.tween(diffArrowUp, {alpha: 0}, 0.2);
+				FlxTween.tween(diffArrowDown, {alpha: 0}, 0.2);
 				FlxTween.tween(bf, {alpha: 0}, 0.2);
 				FlxTween.tween(cloud, {alpha: 0}, 0.2);
 				FlxTween.tween(currentIcon, {alpha: 0}, 0.2);
@@ -553,7 +580,7 @@ class FreeplayState extends MusicBeatState
 				trace('CHANGED MOD DIRECTORY, RELOADING STUFF');
 				Paths.freeGraphicsFromMemory();
 			}
-			LoadingState.prepareToSong();
+			#if !debug LoadingState.prepareToSong(); #end
 			LoadingState.loadAndSwitchState(new PlayState());
 			#if !SHOW_LOADING_SCREEN FlxG.sound.music.stop(); #end
 			stopMusicPlay = true;
@@ -611,10 +638,7 @@ class FreeplayState extends MusicBeatState
 
 		lastDifficultyName = Difficulty.getString(curDifficulty, false);
 		var displayDiff:String = Difficulty.getString(curDifficulty);
-		if (Difficulty.list.length > 1)
-			diffText.text = '< ' + displayDiff.toUpperCase() + ' >';
-		else
-			diffText.text = displayDiff.toUpperCase();
+		diffText.text = displayDiff.toUpperCase();
 
 		missingText.visible = false;
 		missingTextBG.visible = false;
@@ -639,7 +663,7 @@ class FreeplayState extends MusicBeatState
 
 		for (num => item in grpSongs.members)
 		{
-			var icon:HealthIcon = iconArray[num];
+			var icon:FlxSprite = iconArray[num];
 
 			if(updateAlpha) {
 				item.alpha = 0.6;
@@ -733,7 +757,7 @@ class FreeplayState extends MusicBeatState
 
 			item.y = yOffset + item.startPosition.y;
 
-			var icon:HealthIcon = iconArray[i];
+			var icon:FlxSprite = iconArray[i];
 			icon.visible = icon.active = true;
 			_lastVisibles.push(i);
 		}

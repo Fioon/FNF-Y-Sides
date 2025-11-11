@@ -1,0 +1,6 @@
+<?xml version='1.0' encoding='utf-8'?>
+<TextureAtlas imagePath="pausesos.png">
+<SubTexture name="exit0000" x="0" y="0" width="460" height="145" frameX="0" frameY="0" frameWidth="460" frameHeight="145" />
+<SubTexture name="resum0000" x="0" y="145" width="460" height="145" frameX="0" frameY="0" frameWidth="460" frameHeight="145" />
+<SubTexture name="restarr0000" x="0" y="290" width="460" height="145" frameX="0" frameY="0" frameWidth="460" frameHeight="145" />
+</TextureAtlas>
