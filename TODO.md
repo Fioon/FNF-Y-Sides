@@ -86,6 +86,8 @@
 
 ## OTHER
 
+- [ ] IMPROVE WEEK 1 MECHANIC EXPLANATION
+
 - [ ] Week 2 Award
 - [ ] Week 3 Award
 
