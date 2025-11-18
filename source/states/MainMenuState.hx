@@ -145,8 +145,8 @@ class MainMenuState extends MusicBeatState
 			FlxTween.cancelTweensOf(characters);
 			FlxTween.tween(characters, {alpha: 1}, 0.7, {ease: FlxEase.quartOut});
 		}
-		else if(CreditsState2.backFromCredits) {
-			CreditsState2.backFromCredits = false;
+		else if(CreditsStateYSides.backFromCredits) {
+			CreditsStateYSides.backFromCredits = false;
 
 			characters.alpha = 0;
 			FlxTween.cancelTweensOf(characters);
@@ -503,7 +503,7 @@ class MainMenuState extends MusicBeatState
 					#if ACHIEVEMENTS_ALLOWED
 						FlxTransitionableState.skipNextTransIn = true;
 						FlxTransitionableState.skipNextTransOut = true;
-						MusicBeatState.switchState(new CreditsState2());
+						MusicBeatState.switchState(new CreditsStateYSides());
 
 						iconsPos.insert(0, icons.x);
 						iconsPos.insert(1, icons.y);

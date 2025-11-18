@@ -257,7 +257,7 @@ class AchievementsMenuState extends MusicBeatState
 
 			new FlxTimer().start(0.6, function(tmr:FlxTimer)
 			{
-				CreditsState2.backFromCredits = true;
+				CreditsStateYSides.backFromCredits = true;
 				comingFromAchievements = true;
 
 				MainMenuState.iconsPos.insert(0, icons.x);

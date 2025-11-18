@@ -6,7 +6,7 @@ import objects.Character;
 import states.MainMenuState;
 import backend.StageData;
 import flixel.addons.text.FlxTypeText;
-import states.CreditsState2;
+import states.CreditsStateYSides;
 
 class OptionsState extends MusicBeatState
 {
@@ -301,7 +301,7 @@ class OptionsState extends MusicBeatState
 			}
 			else
 			{
-				CreditsState2.backFromCredits = true;
+				CreditsStateYSides.backFromCredits = true;
 				comingFromOptions = true;
 
 				FlxTween.cancelTweensOf(boardThing);
