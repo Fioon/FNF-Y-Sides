@@ -770,18 +770,16 @@ class PlayState extends MusicBeatState
 			var file = Paths.json('${Paths.formatToSongPath(curSong)}/dialogue');
 			var endFunc:Void->Void;
 			endFunc = startCountdown;
-			if(curSong == 'Dad Battle') 
-			{
-				endFunc = function()
-				{
-					FlxTween.tween(mechanicPoster, {x: 10}, 1, {ease: FlxEase.quartOut});
-					FlxTween.tween(mechanicEnterSprite, {x: FlxG.width - mechanicEnterSprite.width - 10}, 1, {ease: FlxEase.quartOut});
-					FlxTween.tween(thisShittyBackground, {alpha: 0.6}, 1, {ease: FlxEase.quartOut});
-					watchingMechanicInfo = true;
-				}
-			}
 			startYSidesDialogue(NewDialogueBox.returnJsonData(file), endFunc);
 			startCallback = null;
+		}
+
+		if(curSong == 'Dad Battle') 
+		{
+			FlxTween.tween(mechanicPoster, {x: 10}, 1, {ease: FlxEase.quartOut});
+			FlxTween.tween(mechanicEnterSprite, {x: FlxG.width - mechanicEnterSprite.width - 10}, 1, {ease: FlxEase.quartOut});
+			FlxTween.tween(thisShittyBackground, {alpha: 0.6}, 1, {ease: FlxEase.quartOut});
+			watchingMechanicInfo = true;
 		}
 
 		if(startCallback != null) startCallback();
