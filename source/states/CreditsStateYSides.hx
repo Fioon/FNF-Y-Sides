@@ -43,6 +43,9 @@ class CreditsStateYSides extends MusicBeatState
 
 	override function create() 
 	{
+		FlxTransitionableState.skipNextTransIn = false;
+		FlxTransitionableState.skipNextTransOut = false;
+
 		bg = new FlxSprite(-80).makeGraphic(1280, 720, 0xFFBFB4F1);
 		bg.antialiasing = ClientPrefs.data.antialiasing;
 		bg.setGraphicSize(Std.int(bg.width * 1.175));
