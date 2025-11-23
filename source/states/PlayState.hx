@@ -774,6 +774,12 @@ class PlayState extends MusicBeatState
 			startCallback = null;
 		}
 
+		if(curSong == 'Spookeez' && isStoryMode)
+		{
+			startCallback = null;
+			startVideo('week2Cutscene', false, true, false, true);
+		}
+
 		if(curSong == 'Dad Battle') 
 		{
 			FlxTween.tween(mechanicPoster, {x: 10}, 1, {ease: FlxEase.quartOut});
