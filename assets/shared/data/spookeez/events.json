@@ -1,0 +1,60 @@
+{
+	"events": [
+		[
+			3692.30769230769,
+			[
+				["smooth_camera_zoom", "0.8", "1, quartOut"],
+				["camera_flash", "1", ""]
+			]
+		],
+		[
+			11076.9230769231,
+			[
+				["smooth_camera_zoom", "0.7", "0.7, quartOut"]
+			]
+		],
+		[
+			18461.5384615385,
+			[
+				["smooth_camera_zoom", "0.65", "0.9, quartOut"]
+			]
+		],
+		[
+			25846.1538461539,
+			[
+				["smooth_camera_zoom", "0.7", "0.9, quartOut"]
+			]
+		],
+		[
+			31384.6153846154,
+			[
+				["smooth_camera_zoom", "0.75", "0.9, quartOut"]
+			]
+		],
+		[
+			33230.7692307692,
+			[
+				["smooth_camera_zoom", "0.65", "0.9, quartOut"]
+			]
+		],
+		[
+			48000,
+			[
+				["smooth_camera_zoom", "0.75", "0.9, quartOut"]
+			]
+		],
+		[
+			55384.6153846154,
+			[
+				["smooth_camera_zoom", "0.7", "0.9, quartOut"]
+			]
+		],
+		[
+			77538.4615384615,
+			[
+				["smooth_camera_zoom", "0.75", "0.9, quartOut"]
+			]
+		]
+	],
+	"format": "psych_v1"
+}
