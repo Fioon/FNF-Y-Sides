@@ -340,6 +340,7 @@ class ResultsScreen extends MusicBeatSubstate
 
             FlxTween.num(1, 0, 0.6, {ease: FlxEase.linear, onComplete: (_) -> {
                 new FlxTimer().start(0.6,(_) -> {
+                    FlxG.sound.playMusic(Paths.music('freakyMenu'));
                     if(PlayState.isStoryMode)
                     {
 		            	FlxTransitionableState.skipNextTransIn = true;
