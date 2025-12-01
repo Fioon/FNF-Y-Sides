@@ -1896,7 +1896,7 @@ class PlayState extends MusicBeatState
 	var startedCountdown:Bool = false;
 	var canPause:Bool = true;
 	var freezeCamera:Bool = false;
-	var allowDebugKeys:Bool = true;
+	var allowDebugKeys:Bool = #if debug true #else false #end;
 
 	var isLiftMechanicEnabled:Bool = true;
 	var liftAmount:Int = 0;
