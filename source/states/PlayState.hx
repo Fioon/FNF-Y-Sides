@@ -32,7 +32,7 @@ import states.FreeplayState;
 import states.editors.ChartingState;
 import states.editors.CharacterEditorState;
 
-import substates.PauseSubState;
+import substates.NewPauseSubState;
 import substates.GameOverSubstate;
 import substates.ResultsScreen;
 
@@ -189,7 +189,7 @@ class PlayState extends MusicBeatState
 	public var healthBar:Bar;
 	public var fcSprite:FlxSprite;
 	public var timeBar:FlxSprite;
-	var songPercent:Float = 0;
+	public var songPercent:Float = 0;
 
 	public var spaceMechanicButton:FlxSprite;
 	public var watchingMechanicInfo:Bool = false;
@@ -319,7 +319,7 @@ class PlayState extends MusicBeatState
 		// for lua
 		instance = this;
 
-		PauseSubState.songName = null; //Reset to default
+		NewPauseSubState.songName = null; //Reset to default
 		playbackRate = ClientPrefs.getGameplaySetting('songspeed');
 
 		keysArray = [
@@ -800,8 +800,8 @@ class PlayState extends MusicBeatState
 		if(!ClientPrefs.data.ghostTapping) for (i in 1...4) Paths.sound('missnote$i');
 		Paths.image('alphabet');
 
-		if (PauseSubState.songName != null)
-			Paths.music(PauseSubState.songName);
+		if (NewPauseSubState.songName != null)
+			Paths.music(NewPauseSubState.songName);
 		else if(Paths.formatToSongPath(ClientPrefs.data.pauseMusic) != 'none')
 			Paths.music(Paths.formatToSongPath(ClientPrefs.data.pauseMusic));
 
@@ -2465,7 +2465,7 @@ class PlayState extends MusicBeatState
 					note.resetAnim = 0;
 				}
 		}
-		openSubState(new PauseSubState());
+		openSubState(new NewPauseSubState());
 
 		#if DISCORD_ALLOWED
 		if(autoUpdateRPC) DiscordClient.changePresence(detailsPausedText, SONG.song + " (" + storyDifficultyText + ")", iconP2.getCharacter());
