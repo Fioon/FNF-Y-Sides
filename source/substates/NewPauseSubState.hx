@@ -58,6 +58,10 @@ class NewPauseSubState extends MusicBeatSubstate
         paperObject.screenCenter();
         add(paperObject);
 
+        paperObject.alpha = 0;
+        paperObject.y += 10;
+        FlxTween.tween(paperObject, {y: paperObject.y - 10, alpha: 1}, 0.5, {ease: FlxEase.quartOut});
+
         camera = FlxG.cameras.list[FlxG.cameras.list.length - 1];
     }
 
@@ -70,9 +74,22 @@ class NewPauseSubState extends MusicBeatSubstate
 		return (formattedSongName != '') ? formattedSongName : formattedPauseMusic;
 	}
 
+    var resumeButtonScale:Float = 1;
+    var restartButtonScale:Float = 1;
+    var exitButtonScale:Float = 1;
+
     override function update(elapsed:Float)
     {
         super.update(elapsed);
+
+        var lerpSpeed:Float = elapsed * 10;
+        var resumeMult:Float = FlxMath.lerp(paperObject.resumeButton.scale.x, resumeButtonScale, lerpSpeed);
+        var restartMult:Float = FlxMath.lerp(paperObject.restartButton.scale.x, restartButtonScale, lerpSpeed);
+        var exitMult:Float = FlxMath.lerp(paperObject.exitButton.scale.x, exitButtonScale, lerpSpeed);
+
+        paperObject.resumeButton.scale.set(resumeMult, resumeMult);
+        paperObject.restartButton.scale.set(restartMult, restartMult);
+        paperObject.exitButton.scale.set(exitMult, exitMult);
 
         if(controls.UI_UP_P || controls.UI_DOWN_P)
         {
@@ -109,21 +126,33 @@ class NewPauseSubState extends MusicBeatSubstate
 
         if(isResumeSelected)
         {
-            paperObject.resumeButton.alpha = 1;
-            paperObject.restartButton.alpha = 0.6;
-            paperObject.exitButton.alpha = 0.6;
+            paperObject.resumeButton.color = 0xFFFFFFFF;
+            paperObject.restartButton.color = 0xFFD9D8ED;
+            paperObject.exitButton.color = 0xFFD9D8ED;
+
+            resumeButtonScale = 1;
+            restartButtonScale = 0.95;
+            exitButtonScale = 0.95;
         }
         else if(isRestartSelected)
         {
-            paperObject.resumeButton.alpha = 0.6;
-            paperObject.restartButton.alpha = 1;
-            paperObject.exitButton.alpha = 0.6;
+            paperObject.resumeButton.color = 0xFFD9D8ED;
+            paperObject.restartButton.color = 0xFFFFFFFF;
+            paperObject.exitButton.color = 0xFFD9D8ED;
+
+            resumeButtonScale = 0.95;
+            restartButtonScale = 1;
+            exitButtonScale = 0.95;
         }
         else
         {
-            paperObject.resumeButton.alpha = 0.6;
-            paperObject.restartButton.alpha = 0.6;
-            paperObject.exitButton.alpha = 1;
+            paperObject.resumeButton.color = 0xFFD9D8ED;
+            paperObject.restartButton.color = 0xFFD9D8ED;
+            paperObject.exitButton.color = 0xFFFFFFFF;
+
+            resumeButtonScale = 0.95;
+            restartButtonScale = 0.95;
+            exitButtonScale = 1;
         }
     }
 
@@ -154,10 +183,13 @@ class PaperObject extends FlxSpriteGroup
     public var exitButton:FlxSprite;
     var progressArrow:FlxSprite;
     var progressBar:FlxSprite;
+    var progress:Float;
 
-    public function new(x:Float = 0, y:Float = 0, progress:Float)
+    public function new(x:Float = 0, y:Float = 0, _progress:Float)
     {
         super(x, y);
+
+        progress = _progress;
 
         function centerSprite(spr1:FlxSprite, spr2:FlxSprite)
         {
@@ -210,8 +242,20 @@ class PaperObject extends FlxSpriteGroup
         progressArrow.x = progressBar.x;
         add(progressArrow);
 
+        // old code lmao
+        /*
         var distance:Float = progressBar.width;
-        //FlxTween.tween(progressArrow, {x: progressBar.x + (progressBar.width * progress)}, 0.9, {ease: FlxEase.quartOut});
         progressArrow.x = progressBar.x + (progressBar.width * progress);
+        var targetPos = progressArrow.x;
+        progressArrow.x = progressBar.x;
+        FlxTween.tween(progressArrow, {x: targetPos}, 1.5, {ease: FlxEase.quartOut});
+        */
+    }
+
+    override function update(delta:Float)
+    {
+        super.update(delta);
+        var mult:Float = FlxMath.lerp(progressArrow.x, progressBar.x + ((progressBar.width - progressArrow.width) * progress), delta * 4);
+        progressArrow.x = mult;
     }
 }
