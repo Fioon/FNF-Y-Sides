@@ -1,5 +1,7 @@
 package substates;
 
+import openfl.filters.ShaderFilter;
+import shaders.BlurShader;
 import backend.Highscore;
 import backend.Song;
 import backend.WeekData;
@@ -21,6 +23,8 @@ class NewPauseSubState extends MusicBeatSubstate
     var paperObject:PaperObject;
     var isResumeSelected:Bool = true;
     var isRestartSelected:Bool = true;
+
+    var blurShaderFilter:ShaderFilter;
 
     override function create()
     {
@@ -61,6 +65,22 @@ class NewPauseSubState extends MusicBeatSubstate
         paperObject.alpha = 0;
         paperObject.y += 10;
         FlxTween.tween(paperObject, {y: paperObject.y - 10, alpha: 1}, 0.5, {ease: FlxEase.quartOut});
+
+        var shader = new BlurShader();
+        shader.radius.value = [0];
+
+        blurShaderFilter = new ShaderFilter(shader);
+
+        // preventing crash
+        if(FlxG.camera.filters == null) FlxG.camera.filters = [];
+        if(PlayState.instance.camHUD.filters == null) PlayState.instance.camHUD.filters = [];
+
+        FlxG.camera.filters.push(blurShaderFilter);
+        PlayState.instance.camHUD.filters.push(blurShaderFilter);
+
+        FlxTween.num(0, 3, 0.5, {ease: FlxEase.quartOut}, function(v:Float){
+            shader.radius.value[0] = v;
+        });
 
         camera = FlxG.cameras.list[FlxG.cameras.list.length - 1];
     }
@@ -105,6 +125,9 @@ class NewPauseSubState extends MusicBeatSubstate
 
         if(controls.ACCEPT)
         {
+            FlxG.camera.filters.remove(blurShaderFilter);
+            PlayState.instance.camHUD.filters.remove(blurShaderFilter);
+
             if(isResumeSelected) closePauseMenu();
             else if(isRestartSelected) restartSong();
             else
