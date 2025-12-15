@@ -562,7 +562,7 @@ class PlayState extends MusicBeatState
 		if(ClientPrefs.data.downScroll) 
 		{
 			if(!ClientPrefs.data.middleScroll) timeBar.y = FlxG.height - timeBar.height - 25;
-			timeTxt.y = timeBar.y + timeBar.height / 4 - 4;
+			timeTxt.y = timeBar.y + timeBar.height / 4;
 		}
 		uiGroup.add(timeTxt);
 
@@ -590,7 +590,9 @@ class PlayState extends MusicBeatState
 		FlxG.worldBounds.set(0, 0, FlxG.width, FlxG.height);
 		moveCameraSection();
 
-		healthBar = new Bar(0, FlxG.height * (!ClientPrefs.data.downScroll ? 0.805 : 0.025), 'hud/hb', function() return healthShower, 0, 2, true, 'hud/hbfill');
+		var hbOffset:Float = 10;
+		healthBar = new Bar(0, FlxG.height * (!ClientPrefs.data.downScroll ? 0.805 : 0.032), 'hud/hb', function() return healthShower, 0, 2, true, 'hud/hbfill');
+		if(ClientPrefs.data.downScroll) healthBar.y += hbOffset;
 		healthBar.screenCenter(X);
 		healthBar.barOffset = new FlxPoint(0, 0);
 
@@ -619,7 +621,7 @@ class PlayState extends MusicBeatState
 		fcSprite.antialiasing = ClientPrefs.data.antialiasing;
 		fcSprite.visible = !ClientPrefs.data.hideHud;
 		fcSprite.alpha = ClientPrefs.data.healthBarAlpha;
-		if(ClientPrefs.data.downScroll) fcSprite.y = -550;
+		if(ClientPrefs.data.downScroll) fcSprite.y = -550 + hbOffset;
 		uiGroup.add(fcSprite);
 
 		iconP1 = new HealthIcon(boyfriend.healthIcon, true);
@@ -667,6 +669,14 @@ class PlayState extends MusicBeatState
 		scoreTxt.visible = !ClientPrefs.data.hideHud;
 		scoreTxt.antialiasing = ClientPrefs.data.antialiasing;
 		uiGroup.add(scoreTxt);
+
+		if(ClientPrefs.data.downScroll)
+		{
+			healthBarArrow.flipY = true;
+			healthBarArrow.y = healthBar.y + healthBar.height + healthBarArrow.height - 10;
+
+			scoreTxt.y = healthBar.y - scoreTxt.height - 7;
+		}
 
 		spaceMechanicButton = new FlxSprite(boyfriend.x - 210, boyfriend.y - 100);
 		spaceMechanicButton.frames = Paths.getSparrowAtlas('hud/mechanic/space_button');
