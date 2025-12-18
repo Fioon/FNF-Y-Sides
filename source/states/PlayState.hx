@@ -300,6 +300,8 @@ class PlayState extends MusicBeatState
 	public var use3Player:Bool = false;
 
 	// monster specific stuff (sprites, stuff, stuff...)
+	var monsterClone:Character;
+	var blackThingBelow:FlxSprite;
 	var blackThing:FlxSprite;
 	var vignette:FlxSprite;
 
@@ -520,18 +522,31 @@ class PlayState extends MusicBeatState
 		startCharacterScripts(boyfriend.curCharacter);
 		#end
 
+		vignette = new FlxSprite().loadGraphic(Paths.image('vignette'));
+		vignette.alpha = 0.25;
+		vignette.cameras = [camHUD];
+		if(SONG.song != 'Monster') vignette.alpha = 0;
+		add(vignette);
+
+		blackThingBelow = new FlxSprite().makeGraphic(1280, 720, 0xFF000000);
+		if(SONG.song != 'Monster') blackThingBelow.alpha = 0;
+		blackThingBelow.cameras = [camHUD];
+		add(blackThingBelow);
+
+		monsterClone = new Character(0, 0, 'monstergloom');
+		if(SONG.song != 'Monster') monsterClone.alpha = 0;
+		monsterClone.cameras = [camHUD];
+		monsterClone.screenCenter();
+		monsterClone.x += 800;
+		monsterClone.y += 350;
+		add(monsterClone);
+
 		uiGroup = new FlxSpriteGroup();
 		comboGroup = new FlxSpriteGroup();
 		noteGroup = new FlxTypedGroup<FlxBasic>();
 		add(comboGroup);
 		add(uiGroup);
 		add(noteGroup);
-
-		vignette = new FlxSprite().loadGraphic(Paths.image('vignette'));
-		vignette.alpha = 0.85;
-		vignette.cameras = [camHUD];
-		if(curSong != 'Monster') vignette.alpha = 0;
-		add(vignette);
 
 		Conductor.songPosition = -Conductor.crochet * 5 + Conductor.offset;
 		var showTime:Bool = (ClientPrefs.data.timeBarType != 'Disabled');
@@ -3725,7 +3740,15 @@ class PlayState extends MusicBeatState
 					}
 				}
 
-				if(canPlay) char.playAnim(animToPlay, true);
+				if(canPlay) 
+				{
+					char.playAnim(animToPlay, true);
+					if(curSong == 'Monster')
+					{
+						monsterClone.playAnim(animToPlay, true);
+						monsterClone.holdTimer = 0;
+					}
+				}
 				char.holdTimer = 0;
 			}
 		}
@@ -4134,22 +4157,11 @@ class PlayState extends MusicBeatState
 				{
 					case 64:
 						blackThing.alpha = 0;
-
-						/*
-						for(obj in uiGroup)
-						{
-							var targetAlpha = obj.alpha;
-							obj.alpha = 0;
-							FlxTween.tween(obj, {alpha: targetAlpha}, 2);
-						}
-
-						for(obj in strumLineNotes)
-						{
-							var targetAlpha = obj.alpha;
-							obj.alpha = 0;
-							FlxTween.tween(obj, {alpha: targetAlpha}, 2);
-						}
-						*/
+					case 608:
+						blackThingBelow.alpha = 0;
+						monsterClone.alpha = 0;
+					case 1088:
+						vignette.alpha = 0.55;
 				}
 			case 'Pico':
 				switch(curStep)
@@ -4231,6 +4243,12 @@ class PlayState extends MusicBeatState
 		}
 		if (dad != null && beat % dad.danceEveryNumBeats == 0 && !dad.getAnimationName().startsWith('sing') && !dad.stunned)
 			dad.dance();
+
+		if(curSong == 'Monster')
+		{
+			if (monsterClone != null && beat % monsterClone.danceEveryNumBeats == 0 && !monsterClone.getAnimationName().startsWith('sing') && !monsterClone.stunned)
+				monsterClone.dance();
+		}
 		
 		if (player3 != null && beat % player3.danceEveryNumBeats == 0 && !player3.getAnimationName().startsWith('sing') && !player3.stunned)
 			player3.dance();
