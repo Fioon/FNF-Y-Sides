@@ -826,6 +826,7 @@ class PlayState extends MusicBeatState
 
 		if(curSong == 'Dad Battle') 
 		{
+			startCallback = null;
 			FlxTween.tween(mechanicPoster, {x: 10}, 1, {ease: FlxEase.quartOut});
 			FlxTween.tween(mechanicEnterSprite, {x: FlxG.width - mechanicEnterSprite.width - 10}, 1, {ease: FlxEase.quartOut});
 			FlxTween.tween(thisShittyBackground, {alpha: 0.6}, 1, {ease: FlxEase.quartOut});
