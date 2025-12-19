@@ -25,11 +25,17 @@ class AchievementsMenuState extends MusicBeatState
 	var camFollow:FlxObject;
 
 	var MAX_PER_ROW:Int = 4;
+	var platiniumAchievement:FlxSprite;
+	var gotPlatinium:Bool = false;
+	var confetti:FlxSprite;
 
 	override function create()
 	{
 		Paths.clearStoredMemory();
 		Paths.clearUnusedMemory();
+		
+		FlxG.camera.zoom = 0.5;
+		FlxG.mouse.visible = true;
 
 		#if DISCORD_ALLOWED
 		DiscordClient.changePresence("Achievements Menu", null);
@@ -148,6 +154,33 @@ class AchievementsMenuState extends MusicBeatState
 		add(progressTxt);
 		add(descText);
 		add(nameText);
+
+		platiniumAchievement = new FlxSprite();
+		platiniumAchievement.loadGraphic(Paths.image('achievements/platiniumTrophie'));
+		platiniumAchievement.scrollFactor.set(0, 0);
+		platiniumAchievement.scale.set(0.35, 0.35);
+		platiniumAchievement.updateHitbox();
+		platiniumAchievement.antialiasing = ClientPrefs.data.antialiasing;
+		platiniumAchievement.x = FlxG.width - platiniumAchievement.width - 20;
+		platiniumAchievement.y = FlxG.height - platiniumAchievement.height - 20;
+		add(platiniumAchievement);
+
+		confetti = new FlxSprite();
+		confetti.frames = Paths.getSparrowAtlas('achievements/confeti');
+		confetti.animation.addByPrefix('play', 'confeti idle', 24, false);
+		confetti.animation.play('play');
+		confetti.scrollFactor.set(0, 0);
+		confetti.alpha = 0.001;
+		confetti.x = platiniumAchievement.x + platiniumAchievement.width / 2 - confetti.width / 2;
+		confetti.y = platiniumAchievement.y + platiniumAchievement.height / 2 - confetti.height / 2;
+		confetti.antialiasing = ClientPrefs.data.antialiasing;
+		//confetti.x = platiniumAchievement.x;
+		//confetti.y = platiniumAchievement.y;
+		//confetti.screenCenter();
+		add(confetti);
+
+		gotPlatinium = checkPlatiniumAchievement();
+		if(!gotPlatinium) platiniumAchievement.color = 0xFF000000;
 		
 		_changeSelection();
 		super.create();
@@ -175,9 +208,29 @@ class AchievementsMenuState extends MusicBeatState
 		return FlxSort.byValues(FlxSort.ASCENDING, Obj1.ID, Obj2.ID);
 
 	var goingBack:Bool = false;
+	var platiniumScale:Float = 0.35;
 	override function update(elapsed:Float) {
 		if(!goingBack && options.length > 1)
 		{
+			if(gotPlatinium)
+			{
+				var mult = FlxMath.lerp(platiniumAchievement.scale.x, platiniumScale, elapsed * 13);
+				platiniumAchievement.scale.set(mult, mult);
+
+				if(FlxG.mouse.overlaps(platiniumAchievement))
+				{
+					platiniumScale = 0.4;
+					if(FlxG.mouse.justPressed)
+					{
+						confetti.alpha = 1;
+						confetti.animation.play('play', true);
+						FlxG.sound.play(Paths.sound('confetti'));
+						FlxG.camera.shake(0.001, 0.5);
+					}
+				}
+				else platiniumScale = 0.35;
+			}
+
 			var add:Int = 0;
 			if (controls.UI_LEFT_P) add = -1;
 			else if (controls.UI_RIGHT_P) add = 1;
@@ -315,6 +368,16 @@ class AchievementsMenuState extends MusicBeatState
 			spr.alpha = 0.6;
 			if(spr.ID == curSelected) spr.alpha = 1;
 		});
+	}	
+	
+	function checkPlatiniumAchievement():Bool
+	{
+		for(achievement => data in Achievements.achievements)
+		{
+			if(!Achievements.isUnlocked(achievement))
+				return false;
+		}
+		return true;
 	}
 }
 

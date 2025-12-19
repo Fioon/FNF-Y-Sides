@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='utf-8'?>
+<TextureAtlas imagePath="confeti.png">
+<SubTexture name="confeti idle0000" x="1336" y="330" width="22" height="26" frameX="-186" frameY="-189" frameWidth="400" frameHeight="400" />
+<SubTexture name="confeti idle0001" x="1057" y="650" width="68" height="74" frameX="-162" frameY="-155" frameWidth="400" frameHeight="400" />
+<SubTexture name="confeti idle0002" x="1243" y="1056" width="113" height="117" frameX="-140" frameY="-129" frameWidth="400" frameHeight="400" />
+<SubTexture name="confeti idle0003" x="1104" y="1056" width="139" height="154" frameX="-120" frameY="-107" frameWidth="400" frameHeight="400" />
+<SubTexture name="confeti idle0004" x="783" y="1056" width="190" height="202" frameX="-99" frameY="-75" frameWidth="400" frameHeight="400" />
+<SubTexture name="confeti idle0005" x="557" y="1056" width="226" height="231" frameX="-81" frameY="-51" frameWidth="400" frameHeight="400" />
+<SubTexture name="confeti idle0006" x="301" y="1056" width="256" height="285" frameX="-66" frameY="-28" frameWidth="400" frameHeight="400" />
+<SubTexture name="confeti idle0007" x="0" y="745" width="272" height="311" frameX="-56" frameY="-20" frameWidth="400" frameHeight="400" />
+<SubTexture name="confeti idle0008" x="1057" y="0" width="309" height="330" frameX="-36" frameY="-18" frameWidth="400" frameHeight="400" />
+<SubTexture name="confeti idle0009" x="272" y="745" width="338" height="310" frameX="-22" frameY="-26" frameWidth="400" frameHeight="400" />
+<SubTexture name="confeti idle0010" x="324" y="400" width="335" height="342" frameX="-27" frameY="-17" frameWidth="400" frameHeight="400" />
+<SubTexture name="confeti idle0011" x="0" y="400" width="324" height="345" frameX="-26" frameY="-23" frameWidth="400" frameHeight="400" />
+<SubTexture name="confeti idle0012" x="735" y="0" width="322" height="347" frameX="-46" frameY="-41" frameWidth="400" frameHeight="400" />
+<SubTexture name="confeti idle0013" x="400" y="0" width="335" height="362" frameX="-45" frameY="-18" frameWidth="400" frameHeight="400" />
+<SubTexture name="confeti idle0014" x="938" y="745" width="324" height="302" frameX="-28" frameY="-43" frameWidth="400" frameHeight="400" />
+<SubTexture name="confeti idle0015" x="610" y="745" width="328" height="304" frameX="-39" frameY="-37" frameWidth="400" frameHeight="400" />
+<SubTexture name="confeti idle0016" x="659" y="400" width="291" height="339" frameX="-62" frameY="-20" frameWidth="400" frameHeight="400" />
+<SubTexture name="confeti idle0017" x="0" y="1056" width="301" height="302" frameX="-49" frameY="-25" frameWidth="400" frameHeight="400" />
+<SubTexture name="confeti idle0018" x="1057" y="330" width="279" height="320" frameX="-67" frameY="-19" frameWidth="400" frameHeight="400" />
+<SubTexture name="confeti idle0019" x="973" y="1056" width="131" height="163" frameX="-158" frameY="-49" frameWidth="400" frameHeight="400" />
+<SubTexture name="confeti idle0020" x="950" y="400" width="77" height="154" frameX="-208" frameY="-60" frameWidth="400" frameHeight="400" />
+<SubTexture name="confeti idle0021" x="1125" y="650" width="116" height="49" frameX="-93" frameY="-218" frameWidth="400" frameHeight="400" />
+<SubTexture name="confeti idle0022" x="0" y="0" width="400" height="400" frameX="0" frameY="0" frameWidth="400" frameHeight="400" />
+<SubTexture name="confeti idle0023" x="0" y="0" width="400" height="400" frameX="0" frameY="0" frameWidth="400" frameHeight="400" />
+<SubTexture name="confeti idle0024" x="0" y="0" width="400" height="400" frameX="0" frameY="0" frameWidth="400" frameHeight="400" />
+</TextureAtlas>
