@@ -824,7 +824,7 @@ class PlayState extends MusicBeatState
 			startVideo('week2Cutscene', false, true, false, true);
 		}
 
-		if(curSong == 'Dad Battle') 
+		if(curSong == 'Dad Battle' && isStoryMode) 
 		{
 			startCallback = null;
 			FlxTween.tween(mechanicPoster, {x: 10}, 1, {ease: FlxEase.quartOut});
