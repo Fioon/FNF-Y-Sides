@@ -9,6 +9,10 @@ function onEvent(name, value1, value2)
         setTextAlignment('lyricsText', 'center')    
         addLuaText('lyricsText')
 
+        if getPropertyFromClass('backend.ClientPrefs', 'data.downScroll') then
+            setProperty('lyricsText.y', getProperty('healthBar.y') + getProperty('healthBar.height') + 80)
+        end
+
         setProperty('lyricsText.antialiasing', getPropertyFromClass('backend.ClientPrefs', 'data.antialiasing', false, false))
     end
 end
