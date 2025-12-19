@@ -209,7 +209,7 @@ class LoadingState extends MusicBeatState
 		charLoading.animation.addByPrefix('madera', 'madera', 24, true);
 		charLoading.animation.addByPrefix('foxy', 'foxy', 24, true);
 		charLoading.animation.addByPrefix('gbv', 'gbv', 24, true);
-		charLoading.animation.addByPrefix('hero', 'hero', 24, true);
+		charLoading.animation.addByPrefix('hero', 'hermoax', 24, true);
 		switch(FlxG.random.int(0, 3))
 		{
 			case 0:
